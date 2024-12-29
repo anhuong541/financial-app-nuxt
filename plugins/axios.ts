@@ -1,6 +1,19 @@
-export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.provide("hello", (msg: string) => `Hello, ${msg}!`);
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 
-  const config = useRuntimeConfig();
-  //   console.log("Runtime config:", config);
+export default defineNuxtPlugin((nuxtApp) => {
+  const api = axios.create({
+    baseURL: "https://jsonplaceholder.typicode.com/todos",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const getRequest = <T = any>(
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> => {
+    return api.get<T>(url, config);
+  };
+
+  nuxtApp.provide("getRequest", getRequest);
 });
