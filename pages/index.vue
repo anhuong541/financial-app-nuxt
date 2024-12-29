@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-type HelloFunction = (value: string) => void;
+import { HelloFunction } from "~/types/plugins"
 
 const nuxtApp = useNuxtApp();
 const hello = nuxtApp.$hello as HelloFunction;
