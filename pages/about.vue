@@ -8,12 +8,5 @@
 <script setup lang="ts">
 const { $getRequest } = useNuxtApp();
 
-async function getApiTodos() {
-  const res = await $getRequest<{
-    id: number;
-    title: string;
-    completed: boolean;
-  }>("");
-  console.log({ res });
-}
+async function getApiTodos() {}
 </script>

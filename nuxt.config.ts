@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     strict: true, // Enforce strict TypeScript checks
   },
   plugins: ["~/plugins/axios", "~/plugins/firebase"],
-  modules: ["@nuxt/content"],
+  modules: ["@nuxt/content", "@nuxtjs/tailwindcss"],
   runtimeConfig: {
     public: {
       firebaseConfig: {
@@ -20,5 +20,14 @@ export default defineNuxtConfig({
         measurementId: process.env.FIREBASE_MEASUREMENT_ID,
       },
     },
+  },
+  tailwindcss: {
+    cssPath: ["~/assets/css/tailwind.css", { injectPosition: "first" }],
+    configPath: "tailwind.config",
+    exposeConfig: {
+      level: 2,
+    },
+    config: {},
+    viewer: true,
   },
 });

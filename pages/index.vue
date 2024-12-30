@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-4">
     <h1>This is the home page</h1>
     <div>
-      <button @click="signInWithGoogle">trigger button</button>
+      <button class="bg-red-500 py-3 px-7" @click="signInWithGoogle">trigger button</button>
       <button @click="signOut($auth)">signout</button>
     </div>
 
@@ -15,22 +15,20 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  onAuthStateChanged,
-  signInWithPopup,
-  signOut,
-  type User,
-} from "firebase/auth";
+import { signInWithPopup, signOut } from "firebase/auth";
 import { provider } from "~/plugins/firebase";
 import { useCounterStore } from "~/stores/index";
 
 const counterStore = useCounterStore();
 
-let userAuth = ref<User | null>(null);
+let { authState, isAuthenticated } = useAuth();
 const { $auth, $axios } = useNuxtApp();
 const hello = (text: string) => console.log(text);
 
-watch(userAuth, (val) => {
+watch(authState, (val) => {
+  console.log("user", { val });
+});
+watch(isAuthenticated, (val) => {
   console.log("user", { val });
 });
 
@@ -44,14 +42,4 @@ async function signInWithGoogle() {
     console.error("Error signing in:", error.message);
   }
 }
-
-onMounted(() => {
-  onAuthStateChanged($auth, (user) => {
-    if (user) {
-      userAuth.value = user; // Set the logged-in user
-    } else {
-      userAuth.value = null; // No user is signed in
-    }
-  });
-});
 </script>
