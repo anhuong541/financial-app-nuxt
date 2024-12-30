@@ -1,3 +1,45 @@
+<script setup>
+import { LayoutDashboard, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-vue-next";
+import { signInWithPopup } from "firebase/auth";
+import { provider } from "~/plugins/firebase";
+import { ref } from "vue";
+
+const { $auth } = useNuxtApp();
+
+const email = ref("");
+const password = ref("");
+const rememberMe = ref(false);
+const showPassword = ref(false);
+
+const handleSubmit = () => {
+  // Handle form submission
+  console.log({
+    email: email.value,
+    password: password.value,
+    rememberMe: rememberMe.value,
+  });
+};
+
+const { authState, isAuthenticated } = useAuth();
+
+watch(authState, (val) => {
+  console.log({ val });
+});
+watch(isAuthenticated, (val) => {
+  console.log({ val });
+});
+
+async function signInWithGoogle() {
+  try {
+    await signInWithPopup($auth, provider);
+    // const user = result.user; // User info after successful login
+    // console.log("User signed in:", user);
+  } catch (error) {
+    console.error("Error signing in:", error.message);
+  }
+}
+</script>
+
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
@@ -6,7 +48,10 @@
           <LayoutDashboard class="h-8 w-8 text-white" />
         </div>
         <h2 class="mt-6 text-3xl font-bold text-gray-900">Welcome back</h2>
-        <p class="mt-2 text-gray-600">Sign in with Google to access Habit Tracking<br />Email sign-in coming soon!</p>
+        <p class="mt-2 text-gray-600">
+          Sign in with Google to access <strong class="font-medium text-coral-500">Habit Tracking</strong><br />Email sign-in not
+          working ¯\_(ツ)_/¯
+        </p>
       </div>
 
       <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
@@ -14,6 +59,7 @@
         <button
           type="button"
           class="w-full flex justify-center items-center gap-2 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral-500"
+          @click="signInWithGoogle"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
             <path fill="#4caf50" d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z" />
@@ -114,22 +160,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { LayoutDashboard, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-vue-next";
-import { ref } from "vue";
-
-const email = ref("");
-const password = ref("");
-const rememberMe = ref(false);
-const showPassword = ref(false);
-
-const handleSubmit = () => {
-  // Handle form submission
-  console.log({
-    email: email.value,
-    password: password.value,
-    rememberMe: rememberMe.value,
-  });
-};
-</script>

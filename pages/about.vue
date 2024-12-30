@@ -1,12 +1,12 @@
 <template>
   <div>
     <div>Hello World from About Page</div>
-    <button @click="getApiTodos">trigger data api</button>
+    <button @click="signOut($auth)">trigger data api</button>
   </div>
 </template>
 
 <script setup lang="ts">
-const { $getRequest } = useNuxtApp();
+import { signOut } from "firebase/auth";
 
-async function getApiTodos() {}
+const { $auth } = useNuxtApp();
 </script>
