@@ -2,18 +2,40 @@
   <div>
     This is the home page
 
-    <button @click="triggerConsole">trigger button</button>
+    <button @click="signInWithGoogle">trigger button</button>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { HelloFunction } from "~/types/plugins"
+import { onAuthStateChanged, signInWithPopup, type User } from "firebase/auth";
+import { provider } from "~/plugins/firebase";
 
-const nuxtApp = useNuxtApp();
-const hello = nuxtApp.$hello as HelloFunction;
+let userAuth = ref<User | null>(null);
+const { $auth } = useNuxtApp();
+const hello = (text: string) => console.log(text);
 
-function triggerConsole() {
-  console.log("trigger!!!");
-  console.log({ axios: hello("An Huong") });
+watch(userAuth, (val) => {
+  console.log("user", { val });
+});
+
+async function signInWithGoogle() {
+  console.log("trigger!!!", $auth, provider);
+  try {
+    const result = await signInWithPopup($auth, provider);
+    const user = result.user; // User info after successful login
+    console.log("User signed in:", user);
+  } catch (error) {
+    console.error("Error signing in:", error.message);
+  }
 }
+
+onMounted(() => {
+  onAuthStateChanged($auth, (user) => {
+    if (user) {
+      userAuth.value = user; // Set the logged-in user
+    } else {
+      userAuth.value = null; // No user is signed in
+    }
+  });
+});
 </script>

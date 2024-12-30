@@ -9,7 +9,11 @@
 const { $getRequest } = useNuxtApp();
 
 async function getApiTodos() {
-  const res = await $getRequest<{ id: number; title: string; completed: boolean }>("");
+  const res = await $getRequest<{
+    id: number;
+    title: string;
+    completed: boolean;
+  }>("");
   console.log({ res });
 }
 </script>

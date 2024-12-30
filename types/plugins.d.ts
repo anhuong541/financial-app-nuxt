@@ -7,6 +7,7 @@ declare module "#app" {
       url: string,
       config?: AxiosRequestConfig
     ) => Promise<AxiosResponse<T>>;
+    $firestore: Firestore;
   }
 }
 
@@ -16,5 +17,6 @@ declare module "vue" {
       url: string,
       config?: AxiosRequestConfig
     ) => Promise<AxiosResponse<T>>;
+    $firestore: Firestore;
   }
 }
