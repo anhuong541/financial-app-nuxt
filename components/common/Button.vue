@@ -1,36 +1,42 @@
-<script setup>
-import { computed, defineProps } from "vue";
-import { cn } from "@/utils";
-import { buttonVariants } from "@/utils/buttonVariants";
+<script setup lang="ts">
+import { cva } from "class-variance-authority";
 
-// Define the props for the Button component
-defineProps({
-  variant: {
-    type: String,
-    default: "default",
+const props = defineProps<{
+  class?: string;
+  size?: "large" | "small" | "medium";
+  borderRadius?: "large" | "none" | "default" | "rounded";
+  variant?: "primary" | "secondary";
+}>();
+
+const buttonVariants = cva("flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium", {
+  variants: {
+    variant: {
+      primary:
+        "text-white bg-coral-500 hover:bg-coral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral-500",
+      secondary: "",
+    },
+    size: { small: "px-2 py-1 text-xs", medium: "px-4 py-2 text-sm", large: "px-6 py-3 text-lg" },
+    borderRadius: {
+      none: "",
+      default: "rounded-md",
+      large: "rounded-lg",
+      rounded: "rounded-full",
+    },
   },
-  size: {
-    type: String,
-    default: "md",
-  },
-  className: {
-    type: String,
-    default: "",
-  },
-  borderRadius: {
-    type: String,
-    default: "rounded",
+  defaultVariants: {
+    variant: "primary",
+    size: "medium",
+    borderRadius: "default",
   },
 });
 
-// Compute the button's dynamic classes
-const buttonClasses = computed(() => {
-  return cn(buttonVariants({ variant, size, className, borderRadius }));
-});
+const className = cn(
+  buttonVariants({ variant: props.variant, size: props.size, borderRadius: props.borderRadius, class: props.class })
+);
 </script>
 
 <template>
-  <button :class="buttonClasses" v-bind="$attrs">
+  <button :class="className" v-bind="$attrs">
     <slot />
   </button>
 </template>

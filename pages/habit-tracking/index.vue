@@ -1,12 +1,14 @@
 <template>
   <div>
-    <div>Hello World from About Page</div>
-    <button @click="signOut($auth)">trigger data api</button>
+    <div>Hello World from Habit Tracking Page</div>
+    <button>trigger data api</button>
+    <Button @click="signOut($auth)"> Sign In </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { signOut } from "firebase/auth";
+import Button from "~/components/common/Button.vue";
 
 const router = useRouter();
 const { $auth } = useNuxtApp();
