@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative rounded-full shadow-md">
     <div
       class="flex items-center space-x-1 cursor-pointer"
       @click="isAvatarDropdownOpen = !isAvatarDropdownOpen"

@@ -11,10 +11,8 @@ const props = defineProps<{
 const buttonVariants = cva("flex justify-center items-center gap-2 px-4 py-2 border border-transparent text-sm font-medium", {
   variants: {
     variant: {
-      primary:
-        "text-white bg-coral-500 hover:bg-coral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral-500",
-      outline:
-        "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral-500",
+      primary: "text-white bg-coral-500 hover:bg-coral-600 focus:outline-none focus:ring focus:ring-coral-500",
+      outline: "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:outline-none",
     },
     size: { small: "px-2 py-1 text-xs", medium: "px-4 py-2 text-sm", large: "px-6 py-3 text-lg" },
     borderRadius: {

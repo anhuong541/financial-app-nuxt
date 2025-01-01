@@ -3,7 +3,7 @@
     <!-- Left side -->
     <div class="flex items-center gap-2">
       <button class="p-2 bg-white shadow-md rounded-md">
-        <Menu class="w-6 h-6" />
+        <Menu class="w-5 h-5" />
       </button>
       <div class="flex items-center gap-2 px-3 py-2 rounded-md bg-white shadow-md cursor-pointer">
         <div class="w-5 h-5 bg-coral-500 rounded-sm"></div>
@@ -25,9 +25,9 @@
 
     <!-- Right side -->
     <div class="flex items-center space-x-4">
-      <div class="flex items-center space-x-1 bg-orange-50 px-3 py-2 rounded-full">
+      <div class="flex items-center gap-1 bg-orange-50 shadow-md px-3 py-2 rounded-full">
         <img src="/assets/images/icons/flame.svg" alt="fire streak" class="w-5 h-5" />
-        <span class="font-medium text-coral-600">2</span>
+        <span class="font-medium text-lg text-coral-600">2</span>
       </div>
       <Avatar />
     </div>

@@ -61,13 +61,14 @@
     </div>
 
     <!-- Add New Habit Button -->
-    <button class="mt-4 px-4 py-2 text-sm border rounded hover:bg-gray-50">+ New Habit</button>
+    <Button class="mt-4"> <Plus class="w-4 h-4" /> New Habit</Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from "lucide-vue-next";
+import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, Plus } from "lucide-vue-next";
+import Button from "~/components/common/Button.vue";
 
 type HabitType = { name: string; achieved: number };
 
