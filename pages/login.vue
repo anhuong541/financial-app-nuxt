@@ -3,6 +3,7 @@ import { LayoutDashboard } from "lucide-vue-next";
 import { signInWithPopup } from "firebase/auth";
 import { provider } from "~/plugins/firebase";
 import LoginForm from "~/components/pages-dependencies/login/LoginForm.vue";
+import Button from "~/components/common/Button.vue";
 
 const router = useRouter();
 const { $auth } = useNuxtApp();
@@ -39,10 +40,7 @@ async function signInWithGoogle() {
       </div>
 
       <!-- Gmail Login -->
-      <button
-        class="w-full flex justify-center items-center gap-2 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral-500"
-        @click="signInWithGoogle"
-      >
+      <Button variant="outline" class="w-full" @click="signInWithGoogle">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
           <path fill="#4caf50" d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z" />
           <path fill="#1e88e5" d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z" />
@@ -57,7 +55,7 @@ async function signInWithGoogle() {
           />
         </svg>
         Connect with Google
-      </button>
+      </Button>
 
       <div class="relative">
         <div class="absolute inset-0 flex items-center">
