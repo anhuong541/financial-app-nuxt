@@ -25,8 +25,8 @@
 
     <!-- Right side -->
     <div class="flex items-center space-x-4">
-      <div class="flex items-center gap-1 bg-orange-50 shadow-md px-3 py-2 rounded-full">
-        <img src="/assets/images/icons/flame.svg" alt="fire streak" class="w-5 h-5" />
+      <div class="flex items-center gap-1 bg-orange-50 shadow-md px-3 py-1 rounded-full">
+        <img src="/assets/images/icons/flame.svg" alt="fire streak" class="w-4 h-4" />
         <span class="font-medium text-lg text-coral-600">2</span>
       </div>
       <Avatar />

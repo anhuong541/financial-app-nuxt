@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { cva } from "class-variance-authority";
-import { Eye, EyeOff } from "lucide-vue-next";
+import { Eye, EyeOff, type LucideIcon } from "lucide-vue-next";
 
 const props = defineProps<{
   id: string;
   title?: string;
   class?: string;
-  icon?: any;
+  icon?: LucideIcon;
   link?: string;
   href?: string;
   showPassword?: boolean;

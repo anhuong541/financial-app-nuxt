@@ -11,7 +11,7 @@
     </div>
 
     <!-- Habit Table -->
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto mb-4">
       <table class="w-full border-collapse">
         <!-- Header Row with Days -->
         <thead>
@@ -60,17 +60,32 @@
       </table>
     </div>
 
-    <!-- Add New Habit Button -->
-    <Button class="mt-4"> <Plus class="w-4 h-4" /> New Habit</Button>
+    <Modal modal-id="addHabitModalStore" label="New Habit" :button-icon="Plus">
+      <div class="flex flex-col space-y-2 text-center sm:text-left">
+        <h2 class="text-lg font-semibold text-foreground">Are you absolutely sure?</h2>
+        <p class="text-sm text-muted-foreground">
+          This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+        </p>
+      </div>
+
+      <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
+        <Button variant="outline" @click="addHabitModal.onClose"> Cancel </Button>
+        <Button @click="() => {}"> Continue </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, Plus } from "lucide-vue-next";
+import { ref } from "vue";
 import Button from "~/components/common/Button.vue";
+import Modal from "~/components/common/Modal.vue";
+import { addHabitModalStore } from "~/stores/globalModals";
 
 type HabitType = { name: string; achieved: number };
+
+const addHabitModal = addHabitModalStore();
 
 // Generate days for January 2025
 const days = ref<{ date: number; dayName: string }[]>([]);
