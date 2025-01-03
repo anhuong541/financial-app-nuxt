@@ -12,7 +12,7 @@
       <button
         v-for="item in props.items"
         @click="item.action"
-        class="flex items-center gap-2 py-2 px-4 rounded-md hover:bg-gray-100"
+        class="flex items-center gap-2 py-2 px-8 text-sm rounded-md hover:bg-gray-100 w-full"
       >
         <component :is="item.icon" class="w-5 h-5" /> {{ item.label }}
       </button>

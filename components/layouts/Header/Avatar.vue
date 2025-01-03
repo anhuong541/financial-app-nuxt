@@ -12,15 +12,21 @@
 </template>
 
 <script lang="ts" setup>
-import { LogOut } from "lucide-vue-next";
+import { Home, LogOut } from "lucide-vue-next";
 import { signOut } from "firebase/auth";
 import Popover from "~/components/common/Popover.vue";
 import type { PopoverItems } from "~/types/common-type";
 
+const router = useRouter();
 const { $auth } = useNuxtApp();
 
 const isAvatarPopoverOpen = ref(false);
 const avatarPopoverItems = ref<PopoverItems[]>([
+  {
+    label: "Home",
+    icon: Home,
+    action: () => router.push("/"),
+  },
   {
     label: "Sign Out",
     icon: LogOut,
