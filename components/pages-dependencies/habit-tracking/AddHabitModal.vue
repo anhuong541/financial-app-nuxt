@@ -19,16 +19,6 @@
           placeholder="Habit description"
           v-model="addNewHabitForm.desc"
         />
-        <Input
-          id="monthly-goal"
-          type="number"
-          :icon="Target"
-          title="Monthly Goal"
-          required
-          v-model="addNewHabitForm.goal"
-          placeholder="1"
-        />
-        <Input id="tag" type="text" :icon="Tag" title="Tag" placeholder="#habit-tag" v-model="addNewHabitForm.tag" />
         <div>
           <label for="color" class="block text-sm font-medium text-gray-700">Colors</label>
 
@@ -47,6 +37,17 @@
             />
           </div>
         </div>
+        <Input
+          id="monthly-goal"
+          type="number"
+          :icon="Target"
+          title="Monthly Goal"
+          required
+          v-model="addNewHabitForm.goal"
+          placeholder="1"
+        />
+        <Input id="tag" type="text" :icon="Tag" title="Tag" placeholder="#habit-tag" v-model="addNewHabitForm.tag" />
+        <Input id="category" type="text" :icon="Grid" title="Category" placeholder="Heatlh" v-model="addNewHabitForm.category" />
       </div>
     </template>
     <template #footer>
@@ -57,10 +58,11 @@
 </template>
 
 <script lang="ts" setup>
-import { FileText, Heading, Plus, Tag, Target } from "lucide-vue-next";
+import { FileText, Grid, Heading, Plus, Tag, Target } from "lucide-vue-next";
 import Button from "~/components/common/Button.vue";
 import Input from "~/components/common/Input.vue";
 import Modal from "~/components/common/Modal.vue";
+import Select from "~/components/common/Select.vue";
 import TextArea from "~/components/common/TextArea.vue";
 import { addHabitModalStore } from "~/stores/globalModals";
 
@@ -72,6 +74,7 @@ const addNewHabitForm = ref({
   goal: "",
   tag: "",
   color: "#3B82F6",
+  category: "",
 });
 
 const colors = [

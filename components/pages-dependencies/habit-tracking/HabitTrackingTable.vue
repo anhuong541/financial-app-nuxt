@@ -9,7 +9,6 @@
         <ChevronRightIcon class="w-5 h-5" />
       </button>
     </div>
-    <!-- TODO: missing add category -->
     <!-- Habit Table -->
     <div class="overflow-x-auto mb-4">
       <table class="w-full border-collapse">
