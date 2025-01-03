@@ -22,9 +22,9 @@ const handleSubmit = () => {
 <template>
   <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
     <div class="space-y-6">
-      <Input id="password" :icon="Mail" title="Email" v-model="email" type="email" required placeholder="username@gmail.com" />
+      <Input id="email" :icon="Mail" title="Email" v-model="email" type="email" required placeholder="username@gmail.com" />
       <Input
-        id="email"
+        id="password"
         :icon="Lock"
         title="Password"
         v-model="password"
@@ -33,6 +33,7 @@ const handleSubmit = () => {
         placeholder="Enter your password"
         link="Forgot Password?"
         href="#"
+        :is-show-pass="true"
         :show-password="showPassword"
         :show-password-click="() => (showPassword = !showPassword)"
       />

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cva } from "class-variance-authority";
-import { Eye, EyeOff, type LucideIcon } from "lucide-vue-next";
+import { type LucideIcon } from "lucide-vue-next";
 
 const props = defineProps<{
   id: string;
@@ -9,9 +9,6 @@ const props = defineProps<{
   icon?: LucideIcon;
   link?: string;
   href?: string;
-  isShowPass?: boolean;
-  showPassword?: boolean;
-  showPasswordClick?: () => void;
   variant?: "primary";
   borderRadius?: "none" | "medium" | "large" | "rounded";
   size?: "medium";
@@ -48,19 +45,10 @@ const className = cn(inputVariants({ variant: props.variant, borderRadius: props
     </div>
 
     <div class="mt-1 relative rounded-md shadow-sm">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <div class="absolute left-0 top-2 pl-3 flex items-center pointer-events-none">
         <icon class="h-5 w-5 text-gray-400" />
       </div>
-      <input :id="props.id" v-bind="$attrs" :class="className" />
-      <button
-        v-if="props.isShowPass"
-        type="button"
-        @click="showPasswordClick"
-        class="absolute inset-y-0 right-0 pr-3 flex items-center"
-      >
-        <Eye v-if="!showPassword" class="h-5 w-5 text-gray-400" />
-        <EyeOff v-else class="h-5 w-5 text-gray-400" />
-      </button>
+      <textarea :id="props.id" v-bind="$attrs" :class="className" />
     </div>
   </div>
 </template>
