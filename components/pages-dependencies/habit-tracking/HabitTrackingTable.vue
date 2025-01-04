@@ -75,7 +75,7 @@
       </table>
     </div>
 
-    <AddHabitModal />
+    <AddHabitModal :habits="habits ?? []" />
   </div>
 </template>
 
@@ -106,6 +106,10 @@ const selectCurrentCheckingTime = computed(() => {
 });
 
 const { data: habits } = useQueryUserHabits();
+watch(habits, (val) => {
+  console.log({ val });
+});
+
 const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime);
 const { mutateAsync: checkHabit } = useMutationMarkCheckingHabit();
 

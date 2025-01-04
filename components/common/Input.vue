@@ -39,22 +39,22 @@ const inputVariants = cva("block w-full border border-gray-300 rounded-md", {
 });
 
 const className = cn(inputVariants({ variant: props.variant, borderRadius: props.borderRadius, class: props.class }), {
-  "pr-4 pl-4": !props.icon,
+  "pr-4 pl-4": !props?.icon,
 });
 </script>
 
 <template>
   <div>
     <div class="flex items-center justify-between">
-      <label v-if="props.title" :for="props.id" class="block text-sm font-medium text-gray-700">
-        {{ props.title }} <sup v-if="props.required" class="text-red-500 font-bold text-xl">*</sup>
+      <label v-if="props.title" :for="props.id" class="flex items-center gap-1 text-sm font-medium text-gray-700">
+        {{ props.title }} <span v-if="props.required" class="text-red-500 font-bold text-xl">*</span>
       </label>
       <a :href="props.href" class="text-sm text-coral-500 hover:text-coral-400"> {{ props.link }} </a>
     </div>
 
     <div class="mt-1 relative rounded-md shadow-sm">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <icon class="h-5 w-5 text-gray-400" />
+      <div v-if="props?.icon" class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <props.icon class="h-5 w-5 text-gray-400" />
       </div>
       <input :id="props.id" v-bind="$attrs" :required="props.required" :class="className" />
       <button

@@ -7,3 +7,16 @@ export const cn = (...classes: ClassValue[]) => twMerge(clsx(...classes));
 export const getMonthName = (monthNum: number, format: string) => {
   return dayjs().month(monthNum).format(format);
 };
+
+export const toKebabCase = (text: string): string => {
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};
+
+export const firebastDataFormat = (date: Date) => {
+  const format = "MMMM D, YYYY [at] h:mm:ss A [UTC]Z";
+  return dayjs(date).format(format);
+};

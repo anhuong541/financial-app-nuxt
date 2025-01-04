@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { queryKeys } from "./query-key";
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import type { AddHabitForm } from "~/types/habits-table-type";
 
 // queries
 export const useQueryUserHabits = () => {
@@ -28,6 +29,8 @@ export const useQueryCheckingUserHabit = (timeKey: ComputedRef<string>) => {
   const userId = computed(() => authState.value?.uid ?? null);
 
   return useQuery({
+    retry: false,
+    refetchOnWindowFocus: false,
     enabled: computed(() => !!userId.value), // Ensure the query only runs when userId is ready
     queryKey: computed(() => [queryKeys.checkingHabits, userId.value, timeKey]),
     queryFn: async () => {
@@ -36,8 +39,6 @@ export const useQueryCheckingUserHabit = (timeKey: ComputedRef<string>) => {
         return (await $getFirebaseDoc(docRef)) ?? {};
       }
     },
-    retry: false,
-    refetchOnWindowFocus: false,
   });
 };
 
@@ -62,6 +63,27 @@ export const useMutationMarkCheckingHabit = () => {
             [day]: { [habitKey]: value },
           });
         }
+      }
+    },
+  });
+};
+
+export const useMutationAddNewHabit = () => {
+  const { authState } = useAuth();
+  const { $firestore } = useNuxtApp();
+  const userId = computed(() => authState.value?.uid ?? null);
+
+  return useMutation({
+    mutationFn: async (habit: AddHabitForm) => {
+      if (userId.value) {
+        const habitId = toKebabCase(habit.label);
+        const docRef = doc($firestore, "users", userId.value, "habits", habitId);
+        await setDoc(docRef, {
+          ...habit,
+          id: habitId,
+          created_at: firebastDataFormat(new Date()),
+          updated_at: firebastDataFormat(new Date()),
+        });
       }
     },
   });
