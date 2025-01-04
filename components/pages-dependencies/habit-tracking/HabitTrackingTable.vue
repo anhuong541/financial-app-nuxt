@@ -4,7 +4,7 @@
       <button class="p-2" @click="decreaseMonth(selectMonth)">
         <ChevronLeftIcon class="w-5 h-5" />
       </button>
-      <h2 class="font-medium">{{ getMonthName(selectMonth) }}, {{ selectYear }}</h2>
+      <h2 class="font-medium">{{ getMonthName(selectMonth, "MMMM") }}, {{ selectYear }}</h2>
       <button class="p-2" @click="increaseMonth(selectMonth)">
         <ChevronRightIcon class="w-5 h-5" />
       </button>
@@ -45,15 +45,22 @@
                 :class="
                   cn(
                     'text-center border-l w-10 cursor-pointer',
-                    isHabitCompleted(habit, day.date) && 'bg-gray-100',
+                    // isHabitCompleted(habit, day.date) && `bg-[${habit.color}]`,
                     today === day.date && 'border-x border-gray-700 text-white',
                     index === habits.length - 1 && 'border-b'
                   )
                 "
-                @click="toggleHabit(habit, day.date)"
+                :style="{ backgroundColor: isHabitCompleted(habit, day.date) ? habit.color : '#fff' }"
+                @click="
+                  async () => {
+                    toggleHabit(habit, day.date);
+                    // this is toggle is update the habit value
+                    await checkHabit({ day: day.date, habitKey: habit.id, value: isHabitCompleted(habit, day.date) });
+                  }
+                "
               >
                 <div class="h-10 mx-auto rounded flex items-center justify-center cursor-pointer">
-                  <CheckIcon v-if="isHabitCompleted(habit, day.date)" class="w-4 h-4 text-gray-600" />
+                  <CheckIcon v-if="isHabitCompleted(habit, day.date)" class="w-4 h-4 text-white" />
                 </div>
               </td>
             </template>
@@ -69,11 +76,12 @@
 
 <script setup lang="ts">
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from "lucide-vue-next";
-import { useQueryCheckingUserHabit, useQueryUserHabits } from "~/libs/vue-query/query-action";
+import { useMutationMarkCheckingHabit, useQueryCheckingUserHabit, useQueryUserHabits } from "~/libs/vue-query/query-action";
+import type { HabitsType } from "~/types/habits-table-type";
 import AddHabitModal from "./AddHabitModal.vue";
+import { getMonthName } from "~/utils";
 import { ref } from "vue";
 import dayjs from "dayjs";
-import type { HabitsType } from "~/types/habits-table-type";
 
 // Completed habits tracking
 const completedHabits = ref(new Set());
@@ -88,58 +96,14 @@ const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
 
 const selectCurrentCheckingTime = computed(() => {
   const year = selectYear.value;
-  const month = dayjs().month(selectMonth.value).startOf("month").format("MMM");
+  const month = getMonthName(selectMonth.value, "MMM");
   return `${year}-${month}`;
-});
-
-const calculateDays = () => {
-  const startDate = dayjs(`2025-${selectMonth.value + 1}-1`);
-  const daysInMonth = startDate.daysInMonth();
-  for (let i = 1; i <= daysInMonth; i++) {
-    const date = startDate.date(i);
-    days.value.push({
-      date: i,
-      dayName: dayNames[date.day()],
-    });
-  }
-};
-
-calculateDays();
-watch(selectMonth, (val) => {
-  days.value = [];
-  calculateDays();
-});
-
-watch([selectMonth, selectYear], ([newSelectMonth, newSelectYear]) => {
-  if (curentMonth === newSelectMonth && curentYear === newSelectYear) {
-    today.value = dayjs().date();
-  } else {
-    today.value = null;
-  }
 });
 
 const { data: habits } = useQueryUserHabits();
 const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime.value);
 
-watch(checkingHabit, (checkinValue) => {
-  // update hatbit key
-  const listHabits = habits.value.map((item: any) => item.id);
-  const dayKeys = Object.keys(checkinValue);
-  dayKeys.forEach((day) => {
-    listHabits.forEach((habit: string) => {
-      const key = `${selectYear.value}-${selectMonth.value}-${habit}-${day}`;
-      if (checkinValue[day][habit]) {
-        completedHabits.value.add(key);
-      } else {
-        completedHabits.value.delete(key);
-      }
-    });
-  });
-});
-
-const getMonthName = (monthNum: number) => {
-  return dayjs().month(monthNum).format("MMMM");
-};
+const { mutateAsync: checkHabit } = useMutationMarkCheckingHabit(selectCurrentCheckingTime.value);
 
 const increaseMonth = (month: number) => {
   if (month === 11) {
@@ -171,4 +135,46 @@ const toggleHabit = (habit: HabitsType, date: number) => {
 const isHabitCompleted = (habit: HabitsType, date: number) => {
   return completedHabits.value.has(`${selectYear.value}-${selectMonth.value}-${habit.id}-${date}`);
 };
+
+const calculateDays = () => {
+  const startDate = dayjs(`2025-${selectMonth.value + 1}-1`);
+  const daysInMonth = startDate.daysInMonth();
+  for (let i = 1; i <= daysInMonth; i++) {
+    const date = startDate.date(i);
+    days.value.push({
+      date: i,
+      dayName: dayNames[date.day()],
+    });
+  }
+};
+
+calculateDays();
+watch(selectMonth, () => {
+  days.value = [];
+  calculateDays();
+});
+
+watch([selectMonth, selectYear], ([newSelectMonth, newSelectYear]) => {
+  if (curentMonth === newSelectMonth && curentYear === newSelectYear) {
+    today.value = dayjs().date();
+  } else {
+    today.value = null;
+  }
+});
+
+watch(checkingHabit, (checkinValue) => {
+  // update hatbit key
+  const listHabits = habits.value.map((item: any) => item.id);
+  const dayKeys = Object.keys(checkinValue);
+  dayKeys.forEach((day) => {
+    listHabits.forEach((habit: string) => {
+      const key = `${selectYear.value}-${selectMonth.value}-${habit}-${day}`;
+      if (checkinValue[day][habit]) {
+        completedHabits.value.add(key);
+      } else {
+        completedHabits.value.delete(key);
+      }
+    });
+  });
+});
 </script>

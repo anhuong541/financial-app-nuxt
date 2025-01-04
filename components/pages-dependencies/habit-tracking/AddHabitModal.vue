@@ -53,10 +53,6 @@ import { addHabitModalStore } from "~/stores/globalModals";
 
 const addHabitModal = addHabitModalStore();
 
-const { authState, isAuthenticated } = useAuth();
-
-console.log({ authState: authState, isAuthenticated });
-
 const addNewHabitForm = ref({
   title: "",
   desc: "",
