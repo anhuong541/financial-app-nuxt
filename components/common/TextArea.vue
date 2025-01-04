@@ -34,7 +34,9 @@ const inputVariants = cva("block w-full border border-gray-300 rounded-md", {
   },
 });
 
-const className = cn(inputVariants({ variant: props.variant, borderRadius: props.borderRadius, class: props.class }));
+const className = cn(inputVariants({ variant: props.variant, borderRadius: props.borderRadius, class: props.class }), {
+  "pr-4 pl-4": !props.icon,
+});
 </script>
 
 <template>

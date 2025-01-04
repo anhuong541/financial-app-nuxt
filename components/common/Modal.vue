@@ -27,7 +27,7 @@ const modalStore = globalModals[props.modalId]();
       <form
         v-on:mouseenter="() => (isOnModal = true)"
         v-on:mouseleave="() => (isOnModal = false)"
-        class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-8 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg md:w-full"
+        class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-8 border bg-white p-6 shadow-lg duration-200 sm:rounded-lg md:w-full"
         ref="modalElement"
       >
         <div class="flex flex-col space-y-2 text-center sm:text-left">
