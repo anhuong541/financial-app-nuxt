@@ -35,7 +35,7 @@
         <!-- Habit Rows -->
         <tbody>
           <tr
-            v-for="(habit, index) in habits"
+            v-for="(habit, index) in formatListHabits"
             :key="habit.id"
             :class="cn('border-t text-sm', index === habits.length - 1 && 'border-b')"
           >
@@ -106,8 +106,9 @@ const selectCurrentCheckingTime = computed(() => {
 });
 
 const { data: habits } = useQueryUserHabits();
-watch(habits, (val) => {
-  console.log({ val });
+
+const formatListHabits = computed(() => {
+  return [...(habits.value ?? [])].sort((a: HabitsType, b: HabitsType) => a.order - b.order);
 });
 
 const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime);

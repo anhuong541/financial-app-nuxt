@@ -65,9 +65,9 @@ import Input from "~/components/common/Input.vue";
 import Modal from "~/components/common/Modal.vue";
 import TextArea from "~/components/common/TextArea.vue";
 import { useMutationAddNewHabit } from "~/libs/vue-query/query-action";
-import { queryKeys } from "~/libs/vue-query/query-key";
-import { addHabitModalStore } from "~/stores/globalModals";
 import type { AddHabitForm, HabitsType } from "~/types/habits-table-type";
+import { addHabitModalStore } from "~/stores/globalModals";
+import { queryKeys } from "~/libs/vue-query/query-key";
 
 const props = defineProps<{
   habits: HabitsType[];
