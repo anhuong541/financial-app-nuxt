@@ -55,7 +55,12 @@
                   async () => {
                     toggleHabit(habit, day.date);
                     // this is toggle is update the habit value
-                    await checkHabit({ day: day.date, habitKey: habit.id, value: isHabitCompleted(habit, day.date) });
+                    await checkHabit({
+                      day: day.date,
+                      habitKey: habit.id,
+                      value: isHabitCompleted(habit, day.date),
+                      timeKey: selectCurrentCheckingTime,
+                    });
                   }
                 "
               >
@@ -101,9 +106,8 @@ const selectCurrentCheckingTime = computed(() => {
 });
 
 const { data: habits } = useQueryUserHabits();
-const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime.value);
-
-const { mutateAsync: checkHabit } = useMutationMarkCheckingHabit(selectCurrentCheckingTime.value);
+const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime);
+const { mutateAsync: checkHabit } = useMutationMarkCheckingHabit();
 
 const increaseMonth = (month: number) => {
   if (month === 11) {
@@ -163,18 +167,19 @@ watch([selectMonth, selectYear], ([newSelectMonth, newSelectYear]) => {
 });
 
 watch(checkingHabit, (checkinValue) => {
-  // update hatbit key
-  const listHabits = habits.value.map((item: any) => item.id);
-  const dayKeys = Object.keys(checkinValue);
-  dayKeys.forEach((day) => {
-    listHabits.forEach((habit: string) => {
-      const key = `${selectYear.value}-${selectMonth.value}-${habit}-${day}`;
-      if (checkinValue[day][habit]) {
-        completedHabits.value.add(key);
-      } else {
-        completedHabits.value.delete(key);
-      }
+  if (checkinValue) {
+    const listHabits = habits.value.map((item: any) => item.id);
+    const dayKeys = Object.keys(checkinValue);
+    dayKeys.forEach((day) => {
+      listHabits.forEach((habit: string) => {
+        const key = `${selectYear.value}-${selectMonth.value}-${habit}-${day}`;
+        if (checkinValue[day][habit]) {
+          completedHabits.value.add(key);
+        } else {
+          completedHabits.value.delete(key);
+        }
+      });
     });
-  });
+  }
 });
 </script>

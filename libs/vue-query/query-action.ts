@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { queryKeys } from "./query-key";
-import { collection, doc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 // queries
 export const useQueryUserHabits = () => {
@@ -22,7 +22,7 @@ export const useQueryUserHabits = () => {
   });
 };
 
-export const useQueryCheckingUserHabit = (timeKey: string) => {
+export const useQueryCheckingUserHabit = (timeKey: ComputedRef<string>) => {
   const { authState } = useAuth();
   const { $firestore, $getFirebaseDoc } = useNuxtApp();
   const userId = computed(() => authState.value?.uid ?? null);
@@ -32,8 +32,8 @@ export const useQueryCheckingUserHabit = (timeKey: string) => {
     queryKey: computed(() => [queryKeys.checkingHabits, userId.value, timeKey]),
     queryFn: async () => {
       if (userId.value) {
-        const docRef = doc($firestore, "users", userId.value, "habits-tracker", timeKey);
-        return await $getFirebaseDoc(docRef);
+        const docRef = doc($firestore, "users", userId.value, "habits-tracker", timeKey.value);
+        return (await $getFirebaseDoc(docRef)) ?? {};
       }
     },
     retry: false,
@@ -42,19 +42,26 @@ export const useQueryCheckingUserHabit = (timeKey: string) => {
 };
 
 // mutations
-export const useMutationMarkCheckingHabit = (timeKey: string) => {
+export const useMutationMarkCheckingHabit = () => {
   const { authState } = useAuth();
   const { $firestore } = useNuxtApp();
   const userId = computed(() => authState.value?.uid ?? null);
 
   return useMutation({
-    mutationFn: async ({ day, habitKey, value }: { day: number; habitKey: string; value: boolean }) => {
+    mutationFn: async ({ day, habitKey, value, timeKey }: { day: number; habitKey: string; value: boolean; timeKey: string }) => {
       if (userId.value) {
         const docRef = doc($firestore, "users", userId.value, "habits-tracker", timeKey);
+        const docSnap = await getDoc(docRef);
         const fieldPath = `${day}.${habitKey}`;
-        await updateDoc(docRef, {
-          [fieldPath]: value,
-        });
+        if (docSnap.exists()) {
+          await updateDoc(docRef, {
+            [fieldPath]: value,
+          });
+        } else {
+          await setDoc(docRef, {
+            [day]: { [habitKey]: value },
+          });
+        }
       }
     },
   });

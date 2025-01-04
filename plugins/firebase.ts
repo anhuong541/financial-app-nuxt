@@ -11,8 +11,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   const getFirebaseDocs = async (colRef: CollectionReference<DocumentData, DocumentData>) => {
     const querySnapshot = await getDocs(colRef);
     return querySnapshot.docs.map((doc) => ({
-      id: doc.id, // Document ID
-      ...doc.data(), // Document Data
+      id: doc.id,
+      ...doc.data(),
     }));
   };
 
