@@ -9,4 +9,24 @@ export const HABIT_COLORS = [
   "#EF4444", // Red
   "#8B5CF6", // Purple
   "#EC4899", // Pink
+  "#D32F2F", // Crimson Red
+  "#C62828", // Ruby Red
+  "#F57C00", // Tangerine Orange
+  "#EF6C00", // Sunset Orange
+  "#FFC107", // Amber Yellow
+  "#FFB300", // Golden Yellow
+  "#388E3C", // Emerald Green
+  "#2E7D32", // Sea Green
+  "#00796B", // Teal Blue
+  "#00695C", // Deep Turquoise
+  "#1976D2", // Azure Blue
+  "#1565C0", // Royal Blue
+  "#5E35B1", // Indigo
+  "#512DA8", // Amethyst Purple
+  "#D81B60", // Hot Pink
+  "#C2185B", // Magenta
+  "#6D4C41", // Chocolate Brown
+  "#455A64", // Slate Gray
+  "#212121", // Charcoal Black
+  "#1B5E20", // Forest Green
 ];

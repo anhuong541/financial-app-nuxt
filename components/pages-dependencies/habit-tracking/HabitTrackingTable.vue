@@ -26,6 +26,7 @@ const today = ref<number | null>(dayjs().date());
 const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
 const listHabits = ref<HabitsType[]>([]);
 const dragSourceIndex = ref<number | null>(null);
+const isDragable = ref(false);
 const selectedHabit = ref<HabitsType>({
   id: "",
   label: "",
@@ -180,11 +181,7 @@ const onDrop = (targetIndex: number) => {
               <span class="text-blue-600">Habits</span>
             </th>
             <template v-for="day in days" :key="day.date">
-              <th
-                :class="
-                  cn('p-1 w-10 text-center font-normal', today === day.date && 'bg-gray-700 text-white border border-gray-700')
-                "
-              >
+              <th :class="cn('p-1 w-10 text-center font-normal', today === day.date && 'bg-[#FFF3E0] border border-[#FFF3E0]')">
                 <p class="text-xs text-gray-400">{{ day.dayName }}</p>
                 <div>{{ day.date }}</div>
               </th>
@@ -198,8 +195,8 @@ const onDrop = (targetIndex: number) => {
           <tr
             v-for="(habit, index) in listHabits"
             :key="habit.id"
-            :class="cn('border-t text-sm', index === habits.length - 1 && 'border-b')"
-            draggable="true"
+            :class="cn('border-t text-sm hover:!bg-gray-100', index === habits.length - 1 && 'border-b')"
+            :draggable="isDragable"
             @dragstart="onDragStart(index)"
             @dragover.prevent="onDragOver(index)"
             @drop="onDrop(index)"
@@ -212,6 +209,8 @@ const onDrop = (targetIndex: number) => {
                   selectedHabit = habit;
                 }
               "
+              v-on:mouseenter="isDragable = true"
+              v-on:mouseleave="isDragable = false"
             >
               {{ habit.label }}
             </td>
@@ -219,9 +218,8 @@ const onDrop = (targetIndex: number) => {
               <td
                 :class="
                   cn(
-                    'text-center border-l w-10 cursor-pointer',
-                    // isHabitCompleted(habit, day.date) && `bg-[${habit.color}]`,
-                    today === day.date && 'border-x border-gray-700 text-white',
+                    'text-center border-l w-10 cursor-pointer transition-all duration-300',
+                    today === day.date && 'bg-[#FFF3E0] border-x border-gray-300',
                     index === habits.length - 1 && 'border-b'
                   )
                 "
@@ -239,7 +237,7 @@ const onDrop = (targetIndex: number) => {
                   }
                 "
               >
-                <div class="h-10 mx-auto rounded flex items-center justify-center cursor-pointer">
+                <div class="h-10 mx-auto rounded flex items-center justify-center">
                   <CheckIcon v-if="isHabitCompleted(habit, day.date)" class="w-4 h-4 text-white" />
                 </div>
               </td>

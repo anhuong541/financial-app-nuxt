@@ -75,7 +75,7 @@ const handleDeleteHabit = async () => {
         />
         <div>
           <label for="color" class="block text-sm font-medium text-gray-700">Colors</label>
-          <div class="mt-1 flex space-x-2 rounded-md shadow-sm">
+          <div class="mt-1 flex flex-wrap gap-2 rounded-md shadow-sm">
             <button
               v-for="color in HABIT_COLORS"
               :key="color"
