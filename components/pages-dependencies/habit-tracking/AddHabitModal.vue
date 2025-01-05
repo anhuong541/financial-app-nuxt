@@ -31,6 +31,10 @@ const addNewHabitForm = ref<AddHabitForm>({
   order: order.value,
 });
 
+watch(order, (val) => {
+  addNewHabitForm.value.order = val;
+});
+
 const handleSubmitAddNewHabit = () => {
   addNewHabit(addNewHabitForm.value, {
     onSuccess: () => {

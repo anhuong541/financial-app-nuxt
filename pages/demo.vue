@@ -1,61 +1,65 @@
 <template>
   <div>
-    <p>Hello World</p>
-
-    <button @click="handleTrackingHabits">click</button>
+    <h2>Drag and Drop List</h2>
+    <div
+      v-for="(item, index) in items"
+      :key="item.id"
+      class="item"
+      draggable="true"
+      @dragstart="onDragStart(index)"
+      @dragover.prevent="onDragOver(index)"
+      @drop="onDrop(index)"
+    >
+      {{ item.name }}
+    </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { collection, getDocs } from "firebase/firestore";
+<script setup>
+import { ref } from "vue";
 
-const { authState } = useAuth();
-const userId = ref<string | undefined>(undefined);
-const { $firestore } = useNuxtApp();
+const items = ref([
+  { id: 1, name: "Item 1" },
+  { id: 2, name: "Item 2" },
+  { id: 3, name: "Item 3" },
+  { id: 4, name: "Item 4" },
+]);
 
-watch(authState, (val) => {
-  userId.value = val?.uid;
-});
+const dragSourceIndex = ref(null);
 
-const handleFirebase = async () => {
-  if (!userId.value) {
-    return;
-  }
-  try {
-    // Reference the collection
-    const colRef = collection($firestore, "users", userId.value, "habits");
-    const querySnapshot = await getDocs(colRef);
-    const docs = querySnapshot.docs.map((doc) => ({
-      id: doc.id, // Document ID
-      ...doc.data(), // Document Data
-    }));
+function onDragStart(index) {
+  dragSourceIndex.value = index;
+}
 
-    console.log("Fetched Documents:", docs);
-    return docs;
-  } catch (error) {
-    console.error("Error fetching documents:", error);
-    throw error;
-  }
-};
+function onDragOver(index) {
+  // Prevent the default to allow dropping
+}
 
-const handleTrackingHabits = async () => {
-  if (!userId.value) {
-    return;
-  }
-  try {
-    // Reference the collection
-    const colRef = collection($firestore, "users", userId.value, "habits-tracker");
-    const querySnapshot = await getDocs(colRef);
-    const docs = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+function onDrop(targetIndex) {
+  const sourceIndex = dragSourceIndex.value;
+  if (sourceIndex === null || sourceIndex === targetIndex) return;
 
-    console.log("Fetched Documents:", docs);
-    return docs;
-  } catch (error) {
-    console.error("Error fetching documents:", error);
-    throw error;
-  }
-};
+  // Swap items in the array
+  const draggedItem = items.value[sourceIndex];
+  items.value.splice(sourceIndex, 1);
+  items.value.splice(targetIndex, 0, draggedItem);
+
+  // Clear the drag source index
+  dragSourceIndex.value = null;
+}
 </script>
+
+<style scoped>
+.item {
+  padding: 10px;
+  margin: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  cursor: move;
+  user-select: none;
+}
+
+.item:hover {
+  background-color: #e0e0e0;
+}
+</style>

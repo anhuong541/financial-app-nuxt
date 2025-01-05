@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from "lucide-vue-next";
-import { useMutationMarkCheckingHabit, useQueryCheckingUserHabit, useQueryUserHabits } from "~/libs/vue-query/query-action";
+import {
+  useMutationMarkCheckingHabit,
+  useMutationUpdateHabitsOrder,
+  useQueryCheckingUserHabit,
+  useQueryUserHabits,
+} from "~/libs/vue-query/query-action";
 import type { HabitsType } from "~/types/habits-table-type";
 import AddHabitModal from "./AddHabitModal.vue";
 import { getMonthName } from "~/utils";
@@ -19,6 +24,8 @@ const curentYear = dayjs().year();
 const curentMonth = dayjs().month();
 const today = ref<number | null>(dayjs().date());
 const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
+const listHabits = ref<HabitsType[]>([]);
+const dragSourceIndex = ref<number | null>(null);
 const selectedHabit = ref<HabitsType>({
   id: "",
   label: "",
@@ -43,15 +50,12 @@ const selectCurrentCheckingTime = computed(() => {
   return `${year}-${month}`;
 });
 
-const { data: habits } = useQueryUserHabits();
 const editHabitModal = editHabitModalStore();
-
-const formatListHabits = computed(() => {
-  return [...(habits.value ?? [])].sort((a: HabitsType, b: HabitsType) => a.order - b.order);
-});
-
+const { data: habits } = useQueryUserHabits();
 const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime);
 const { mutateAsync: checkHabit } = useMutationMarkCheckingHabit();
+// const { mutateAsync: updateHabitOrder } = useMutationUpdateHabitsOrder();
+// This is feature is suspend because of my budget not allow
 
 const increaseMonth = (month: number) => {
   if (month === 11) {
@@ -102,6 +106,10 @@ watch(selectMonth, () => {
   calculateDays();
 });
 
+watch(habits, (val) => {
+  listHabits.value = [...(val ?? [])].sort((a: HabitsType, b: HabitsType) => a.order - b.order);
+});
+
 watch([selectMonth, selectYear], ([newSelectMonth, newSelectYear]) => {
   if (curentMonth === newSelectMonth && curentYear === newSelectYear) {
     today.value = dayjs().date();
@@ -126,6 +134,29 @@ watch(checkingHabit, (checkinValue) => {
     });
   }
 });
+
+const onDragStart = (index: number) => {
+  dragSourceIndex.value = index;
+};
+
+const onDragOver = (index: number) => {
+  // Prevent the default to allow dropping
+};
+
+const onDrop = (targetIndex: number) => {
+  const sourceIndex = dragSourceIndex.value;
+  console.log({ targetIndex, dragSourceIndex: dragSourceIndex.value });
+  if (sourceIndex === null || sourceIndex === targetIndex) return;
+
+  const draggedItem = listHabits.value[sourceIndex];
+  const updatedItems = [...listHabits.value];
+
+  updatedItems.splice(sourceIndex, 1);
+  updatedItems.splice(targetIndex, 0, draggedItem);
+  listHabits.value = [...updatedItems];
+  // Clear the drag source index
+  dragSourceIndex.value = null;
+};
 </script>
 
 <template>
@@ -165,9 +196,13 @@ watch(checkingHabit, (checkinValue) => {
         <!-- Habit Rows -->
         <tbody>
           <tr
-            v-for="(habit, index) in formatListHabits"
+            v-for="(habit, index) in listHabits"
             :key="habit.id"
             :class="cn('border-t text-sm', index === habits.length - 1 && 'border-b')"
+            draggable="true"
+            @dragstart="onDragStart(index)"
+            @dragover.prevent="onDragOver(index)"
+            @drop="onDrop(index)"
           >
             <td
               class="p-2 cursor-pointer"

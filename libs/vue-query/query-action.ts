@@ -122,3 +122,35 @@ export const useMutationDeleteHabit = () => {
     },
   });
 };
+
+export const useMutationUpdateHabitsOrder = () => {
+  const { authState } = useAuth();
+  const { $firestore } = useNuxtApp();
+  const userId = computed(() => authState.value?.uid ?? null);
+
+  return useMutation({
+    mutationFn: async ({
+      targetHabitId,
+      targetHabitOrder,
+      sourceHabitId,
+      sourceHabitOrder,
+    }: {
+      targetHabitId: string;
+      targetHabitOrder: number;
+      sourceHabitId: string;
+      sourceHabitOrder: number;
+    }) => {
+      if (userId.value) {
+        // this feature got ban
+        const docRefTarget = doc($firestore, "users", userId.value, "habits", targetHabitId);
+        const docRefSource = doc($firestore, "users", userId.value, "habits", sourceHabitId);
+        await updateDoc(docRefTarget, {
+          order: targetHabitOrder,
+        });
+        await updateDoc(docRefSource, {
+          order: sourceHabitOrder,
+        });
+      }
+    },
+  });
+};

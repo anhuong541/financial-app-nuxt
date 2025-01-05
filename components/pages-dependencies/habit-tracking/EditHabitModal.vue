@@ -18,12 +18,12 @@ const queryClient = useQueryClient();
 const { mutateAsync: editHabit } = useMutationEditHabit();
 const { mutateAsync: deleteHabit } = useMutationDeleteHabit();
 
-const editHabitForm = ref<HabitsType>({ ...props.habit });
+const editHabitForm = computed<HabitsType>(() => ({ ...props.habit }));
 
 const handleSubmitEditHabit = async () => {
   //  TODO: This is submit is still need to check the condition if the data is changing or not so we can stop handle edit error
   // i thing we should use validation library to handle before submit for: learn to handle validate on vue with solve the problem above
-  if (!$lodash.isEqual(editHabitForm.value, props.habit)) {
+  if ($lodash.isEqual(editHabitForm.value, props.habit)) {
     editHabitModal.onClose();
     return;
   }
