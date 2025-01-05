@@ -1,3 +1,4 @@
+import { lodash } from "lodash";
 // types/nuxt.d.ts
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import type { Auth } from "firebase/auth";
@@ -16,6 +17,8 @@ declare module "#app" {
     $firestore: Firestore;
     $getFirebaseDocs: (colRef: CollectionReference<DocumentData, DocumentData>) => Promise<any>;
     $getFirebaseDoc: (docRef: DocumentReference<DocumentData, DocumentData>) => Promise<any | undefined>;
+
+    $lodash: typeof lodash;
   }
 }
 
@@ -32,5 +35,7 @@ declare module "vue" {
     $firestore: Firestore;
     $getFirebaseDocs: (colRef: CollectionReference<DocumentData, DocumentData>) => Promise<any>;
     $getFirebaseDoc: (docRef: DocumentReference<DocumentData, DocumentData>) => Promise<any | undefined>;
+
+    $lodash: typeof lodash;
   }
 }

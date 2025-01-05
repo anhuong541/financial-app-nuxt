@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { queryKeys } from "./query-key";
-import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import type { AddHabitForm } from "~/types/habits-table-type";
 
 // queries
@@ -103,6 +103,21 @@ export const useMutationEditHabit = () => {
           id: habitId,
           updated_at: firebastDataFormat(new Date()),
         });
+      }
+    },
+  });
+};
+
+export const useMutationDeleteHabit = () => {
+  const { authState } = useAuth();
+  const { $firestore } = useNuxtApp();
+  const userId = computed(() => authState.value?.uid ?? null);
+
+  return useMutation({
+    mutationFn: async (habitId: string) => {
+      if (userId.value) {
+        const docRef = doc($firestore, "users", userId.value, "habits", habitId);
+        await deleteDoc(docRef);
       }
     },
   });
