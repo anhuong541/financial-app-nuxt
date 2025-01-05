@@ -88,3 +88,22 @@ export const useMutationAddNewHabit = () => {
     },
   });
 };
+
+export const useMutationEditHabit = () => {
+  const { authState } = useAuth();
+  const { $firestore } = useNuxtApp();
+  const userId = computed(() => authState.value?.uid ?? null);
+
+  return useMutation({
+    mutationFn: async ({ habit, habitId }: { habit: AddHabitForm; habitId: string }) => {
+      if (userId.value) {
+        const docRef = doc($firestore, "users", userId.value, "habits", habitId);
+        await updateDoc(docRef, {
+          ...habit,
+          id: habitId,
+          updated_at: firebastDataFormat(new Date()),
+        });
+      }
+    },
+  });
+};

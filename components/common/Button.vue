@@ -5,7 +5,8 @@ const props = defineProps<{
   class?: string;
   size?: "large" | "small" | "medium";
   borderRadius?: "large" | "none" | "medium" | "rounded";
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outline" | "destructive";
+  border?: "none" | "default" | "medium";
 }>();
 
 const buttonVariants = cva("flex justify-center items-center gap-2 px-4 py-2 border border-transparent text-sm font-medium", {
@@ -13,6 +14,7 @@ const buttonVariants = cva("flex justify-center items-center gap-2 px-4 py-2 bor
     variant: {
       primary: "text-white bg-coral-500 hover:bg-coral-600 focus:outline-none focus:ring focus:ring-coral-500",
       outline: "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:outline-none",
+      destructive: "border border-red-500 hover:bg-red-500 hover:text-white text-red-500",
     },
     size: { small: "px-2 py-1 text-xs", medium: "px-4 py-2 text-sm", large: "px-6 py-3 text-lg" },
     borderRadius: {
@@ -21,21 +23,36 @@ const buttonVariants = cva("flex justify-center items-center gap-2 px-4 py-2 bor
       large: "rounded-lg",
       rounded: "rounded-full",
     },
+    border: {
+      none: "border-0",
+      default: "border",
+      medium: "border-2",
+    },
   },
   defaultVariants: {
     variant: "primary",
     size: "medium",
     borderRadius: "medium",
+    border: "default",
   },
 });
-
-const className = cn(
-  buttonVariants({ variant: props.variant, size: props.size, borderRadius: props.borderRadius, class: props.class })
-);
 </script>
 
 <template>
-  <button :class="className" v-bind="$attrs">
+  <button
+    :class="
+      cn(
+        buttonVariants({
+          variant: props.variant,
+          size: props.size,
+          borderRadius: props.borderRadius,
+          border: props.border,
+          class: props.class,
+        })
+      )
+    "
+    v-bind="$attrs"
+  >
     <slot />
   </button>
 </template>

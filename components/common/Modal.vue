@@ -1,12 +1,8 @@
 <script lang="ts" setup>
-import globalModals, { type ModalsType } from "~/stores/globalModals";
-import Button from "./Button.vue";
-import type { LucideIcon } from "lucide-vue-next";
+import globalModals from "~/stores/globalModals";
 
 const props = defineProps<{
-  modalId: ModalsType;
-  buttonIcon: LucideIcon;
-  label: string;
+  modalId: keyof typeof globalModals;
   title: string;
 }>();
 
@@ -17,7 +13,7 @@ const modalStore = globalModals[props.modalId]();
 
 <template>
   <div>
-    <Button @click="modalStore.onChangeModal"> <props.buttonIcon class="h-4 w-4" /> {{ props.label }} </Button>
+    <slot name="trigger" />
 
     <div
       v-if="modalStore.$state.open"
