@@ -15,7 +15,7 @@ const motivationalMessage = computed(() => {
   } else if (progress.value > 50) {
     return "Halfway there! Keep it up!";
   } else {
-    return "";
+    return false;
   }
 });
 </script>
@@ -25,7 +25,7 @@ const motivationalMessage = computed(() => {
     <div class="bg-gray-300 rounded-md">
       <div class="progress-bar" :style="{ width: progress + '%' }"></div>
     </div>
-    <div class="visual-effects font-medium text-xs" :class="{ fire: isCloseToGoal }">
+    <div v-if="!!motivationalMessage" class="visual-effects font-medium text-xs" :class="{ fire: isCloseToGoal }">
       <p>{{ motivationalMessage }}</p>
     </div>
   </div>
