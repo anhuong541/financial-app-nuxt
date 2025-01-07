@@ -24,7 +24,7 @@ const { mutateAsync: addNewHabit } = useMutationAddNewHabit();
 const addNewHabitForm = ref<AddHabitForm>({
   label: "",
   description: "",
-  // goal: "",
+  goal: 0,
   tag: "",
   color: "#3B82F6",
   category: [""],
@@ -71,6 +71,15 @@ const handleSubmitAddNewHabit = () => {
           v-model="addNewHabitForm.description"
           @input="addNewHabitForm.description = $event.target.value"
         />
+        <Input
+          id="monthly-goal"
+          type="number"
+          title="Monthly Goal"
+          required
+          v-model="addNewHabitForm.goal"
+          @input="addNewHabitForm.goal = $event.target.value"
+          placeholder="15"
+        />
         <div>
           <label for="color" class="block text-sm font-medium text-gray-700">Colors</label>
           <div class="mt-1 flex flex-wrap gap-2 rounded-md shadow-sm">
@@ -88,18 +97,8 @@ const handleSubmitAddNewHabit = () => {
             />
           </div>
         </div>
-        <!-- 
-        <Input
-          id="monthly-goal"
-          type="number"
-          title="Monthly Goal"
-          required
-          v-model="addNewHabitForm.goal"
-          placeholder="1"
-        />
-        <Input id="tag" type="text" title="Tag" placeholder="#habit-tag" v-model="addNewHabitForm.tag" />
-        <Input id="category" type="text" title="Category" placeholder="Heatlh" v-model="addNewHabitForm.category" />
-         -->
+        <!-- <Input id="tag" type="text" title="Tag" placeholder="#habit-tag" v-model="addNewHabitForm.tag" />
+        <Input id="category" type="text" title="Category" placeholder="Heatlh" v-model="addNewHabitForm.category" /> -->
       </div>
     </template>
     <template #footer>

@@ -1,23 +1,20 @@
 <script setup lang="ts">
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from "lucide-vue-next";
-import {
-  useMutationMarkCheckingHabit,
-  useMutationUpdateHabitsOrder,
-  useQueryCheckingUserHabit,
-  useQueryUserHabits,
-} from "~/libs/vue-query/query-action";
+import { useMutationMarkCheckingHabit, useQueryCheckingUserHabit, useQueryUserHabits } from "~/libs/vue-query/query-action";
 import type { HabitsType } from "~/types/habits-table-type";
 import AddHabitModal from "./AddHabitModal.vue";
-import { getMonthName } from "~/utils";
+import { getMonthName, getDateKey } from "~/utils";
 import { ref } from "vue";
 import dayjs from "dayjs";
 import EditHabitModal from "./EditHabitModal.vue";
 import { editHabitModalStore } from "~/stores/globalModals";
+import AchievedCell from "./AchievedCell.vue";
+import HabitDayCell from "./HabitDayCell.vue";
 
 // Completed habits tracking
 const completedHabits = ref(new Set());
 const days = ref<{ date: number; dayName: string }[]>([]);
-const habitsAchived = ref<{ [key: string]: number }>({});
+const habitsAchieved = ref<{ [key: string]: { [key: string]: number } }>({});
 const selectMonth = ref(dayjs().month());
 const selectYear = ref(dayjs().year());
 const curentYear = dayjs().year();
@@ -27,6 +24,7 @@ const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
 const listHabits = ref<HabitsType[]>([]);
 const dragSourceIndex = ref<number | null>(null);
 const isDragable = ref(false);
+const checkKey = ref<{ [key: string]: boolean }>({});
 const selectedHabit = ref<HabitsType>({
   id: "",
   label: "",
@@ -43,17 +41,14 @@ const selectedHabit = ref<HabitsType>({
   order: 0,
   description: "",
   color: "",
+  goal: 0,
 });
 
-const selectCurrentCheckingTime = computed(() => {
-  const year = selectYear.value;
-  const month = getMonthName(selectMonth.value, "MMM");
-  return `${year}-${month}`;
-});
+const selectCurrentCheckingTime = computed(() => getDateKey(selectYear.value, selectMonth.value));
 
 const editHabitModal = editHabitModalStore();
 const { data: habits } = useQueryUserHabits();
-const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime);
+const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime, checkKey.value);
 const { mutateAsync: checkHabit } = useMutationMarkCheckingHabit();
 // const { mutateAsync: updateHabitOrder } = useMutationUpdateHabitsOrder();
 // This is feature is suspend because of my budget not allow
@@ -76,12 +71,53 @@ const decreaseMonth = (month: number) => {
   }
 };
 
+const updateArchived = (habitId: string, month: number, year: number, type: "plus" | "minus") => {
+  const dateKey = getDateKey(year, month);
+  if (!habitsAchieved.value[dateKey]) {
+    habitsAchieved.value[dateKey] = {};
+  }
+  if (!habitsAchieved.value[dateKey][habitId]) {
+    habitsAchieved.value[dateKey][habitId] = 0;
+  }
+
+  if (type === "plus") {
+    habitsAchieved.value[dateKey][habitId]++;
+  } else if (type === "minus" && habitsAchieved.value[dateKey][habitId] > 0) {
+    habitsAchieved.value[dateKey][habitId]--;
+  }
+};
+
+const onDragStart = (index: number) => {
+  dragSourceIndex.value = index;
+};
+
+const onDragOver = (index: number) => {
+  // Prevent the default to allow dropping
+};
+
+const onDrop = (targetIndex: number) => {
+  const sourceIndex = dragSourceIndex.value;
+  // console.log({ targetIndex, dragSourceIndex: dragSourceIndex.value });
+  if (sourceIndex === null || sourceIndex === targetIndex) return;
+
+  const draggedItem = listHabits.value[sourceIndex];
+  const updatedItems = [...listHabits.value];
+
+  updatedItems.splice(sourceIndex, 1);
+  updatedItems.splice(targetIndex, 0, draggedItem);
+  listHabits.value = [...updatedItems];
+  // Clear the drag source index
+  dragSourceIndex.value = null;
+};
+
 const toggleHabit = (habit: HabitsType, date: number) => {
   const key = `${selectYear.value}-${selectMonth.value}-${habit.id}-${date}`;
   if (completedHabits.value.has(key)) {
     completedHabits.value.delete(key);
+    updateArchived(habit.id, selectMonth.value, selectYear.value, "minus");
   } else {
     completedHabits.value.add(key);
+    updateArchived(habit.id, selectMonth.value, selectYear.value, "plus");
   }
 };
 
@@ -117,10 +153,16 @@ watch([selectMonth, selectYear], ([newSelectMonth, newSelectYear]) => {
   } else {
     today.value = null;
   }
+
+  // Reset archived data if switching months or years
+  const dateKey = getDateKey(newSelectYear, newSelectMonth);
+  if (!habitsAchieved.value[dateKey]) {
+    habitsAchieved.value[dateKey] = {};
+  }
 });
 
 watch(checkingHabit, (checkinValue) => {
-  if (checkinValue) {
+  if (checkinValue && !checkKey.value[selectCurrentCheckingTime.value]) {
     const listHabits = habits.value.map((item: any) => item.id);
     const dayKeys = Object.keys(checkinValue);
     dayKeys.forEach((day) => {
@@ -128,36 +170,13 @@ watch(checkingHabit, (checkinValue) => {
         const key = `${selectYear.value}-${selectMonth.value}-${habit}-${day}`;
         if (checkinValue[day][habit]) {
           completedHabits.value.add(key);
-        } else {
-          completedHabits.value.delete(key);
+          updateArchived(habit, selectMonth.value, selectYear.value, "plus");
         }
       });
     });
+    checkKey.value[selectCurrentCheckingTime.value] = true;
   }
 });
-
-const onDragStart = (index: number) => {
-  dragSourceIndex.value = index;
-};
-
-const onDragOver = (index: number) => {
-  // Prevent the default to allow dropping
-};
-
-const onDrop = (targetIndex: number) => {
-  const sourceIndex = dragSourceIndex.value;
-  console.log({ targetIndex, dragSourceIndex: dragSourceIndex.value });
-  if (sourceIndex === null || sourceIndex === targetIndex) return;
-
-  const draggedItem = listHabits.value[sourceIndex];
-  const updatedItems = [...listHabits.value];
-
-  updatedItems.splice(sourceIndex, 1);
-  updatedItems.splice(targetIndex, 0, draggedItem);
-  listHabits.value = [...updatedItems];
-  // Clear the drag source index
-  dragSourceIndex.value = null;
-};
 </script>
 
 <template>
@@ -171,14 +190,13 @@ const onDrop = (targetIndex: number) => {
         <ChevronRightIcon class="w-5 h-5" />
       </button>
     </div>
-    <!-- Habit Table -->
+
     <div class="overflow-x-auto mb-4">
-      <table class="w-full border-collapse">
-        <!-- Header Row with Days -->
+      <table class="border-collapse table-auto 2xl:w-full w-[1600px]">
         <thead>
           <tr class="text-sm">
             <th class="font-normal p-2 text-left min-w-[200px]">
-              <span class="text-blue-600">Habits</span>
+              <span class="text-coral-600 font-medium">Habits</span>
             </th>
             <template v-for="day in days" :key="day.date">
               <th :class="cn('p-1 w-10 text-center font-normal', today === day.date && 'bg-[#FFF3E0] border border-[#FFF3E0]')">
@@ -186,11 +204,11 @@ const onDrop = (targetIndex: number) => {
                 <div>{{ day.date }}</div>
               </th>
             </template>
-            <th class="font-normal p-2 text-center min-w-[80px] text-blue-600">Achieved</th>
+            <th class="font-medium p-2 text-center min-w-[80px] text-coral-600">Goal</th>
+            <th class="font-medium p-2 text-center min-w-[80px] border-l text-coral-600">Achieved</th>
           </tr>
         </thead>
 
-        <!-- Habit Rows -->
         <tbody>
           <tr
             v-for="(habit, index) in listHabits"
@@ -214,35 +232,38 @@ const onDrop = (targetIndex: number) => {
             >
               {{ habit.label }}
             </td>
-            <template v-for="day in days" :key="day.date">
-              <td
-                :class="
-                  cn(
-                    'text-center border-l w-10 cursor-pointer transition-all duration-300',
-                    today === day.date && 'bg-[#FFF3E0] border-x border-gray-300',
-                    index === habits.length - 1 && 'border-b'
-                  )
-                "
-                :style="{ backgroundColor: isHabitCompleted(habit, day.date) ? habit.color : '#fff' }"
-                @click="
-                  async () => {
-                    toggleHabit(habit, day.date);
-                    // this is toggle is update the habit value
-                    await checkHabit({
-                      day: day.date,
-                      habitKey: habit.id,
-                      value: isHabitCompleted(habit, day.date),
-                      timeKey: selectCurrentCheckingTime,
-                    });
-                  }
-                "
-              >
-                <div class="h-10 mx-auto rounded flex items-center justify-center">
-                  <CheckIcon v-if="isHabitCompleted(habit, day.date)" class="w-4 h-4 text-white" />
-                </div>
-              </td>
-            </template>
-            <td class="p-2 text-center border-l">0</td>
+            <HabitDayCell
+              v-for="day in days"
+              :key="day.date"
+              v-on:click="
+                async () => {
+                  toggleHabit(habit, day.date);
+                  // this is toggle is update the habit value
+                  await checkHabit({
+                    day: day.date,
+                    habitKey: habit.id,
+                    value: isHabitCompleted(habit, day.date),
+                    timeKey: selectCurrentCheckingTime,
+                  });
+                }
+              "
+              :is-habit-completed="isHabitCompleted(habit, day.date)"
+              :habit-color="habit.color"
+              :day="day"
+              :is-last-habit="index === habits.length - 1"
+              :today="today"
+            />
+
+            <td class="p-2 text-center border-x">
+              {{ habit.goal ?? 0 }}
+            </td>
+            <td class="p-2 text-center border-l">
+              <!-- {{ habitsAchieved[getDateKey(selectYear, selectMonth)]?.[habit.id] ?? 0 }} -->
+              <AchievedCell
+                :archived="habitsAchieved[getDateKey(selectYear, selectMonth)]?.[habit.id] ?? 0"
+                :goal="habit.goal ?? 0"
+              />
+            </td>
           </tr>
         </tbody>
       </table>

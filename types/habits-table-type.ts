@@ -14,6 +14,7 @@ export type HabitsType = {
   order: number;
   description: string;
   color: string;
+  goal: number;
 };
 
 export type AddHabitForm = {
@@ -23,4 +24,5 @@ export type AddHabitForm = {
   order: number;
   description: string;
   color: string;
+  goal: number;
 };

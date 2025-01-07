@@ -73,6 +73,16 @@ const handleDeleteHabit = async () => {
           placeholder="Habit description"
           @input="editHabitForm.description = $event.target.value"
         />
+        <Input
+          id="monthly-goal"
+          type="number"
+          title="Monthly Goal"
+          required
+          v-model="editHabitForm.goal"
+          :value="props.habit.goal"
+          @input="editHabitForm.goal = $event.target.value"
+          placeholder="15"
+        />
         <div>
           <label for="color" class="block text-sm font-medium text-gray-700">Colors</label>
           <div class="mt-1 flex flex-wrap gap-2 rounded-md shadow-sm">

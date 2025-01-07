@@ -20,3 +20,8 @@ export const firebastDataFormat = (date: Date) => {
   const format = "MMMM D, YYYY [at] h:mm:ss A [UTC]Z";
   return dayjs(date).format(format);
 };
+
+export const getDateKey = (year: number, month: number): string => {
+  const result = `${year}-${getMonthName(month, "MMM")}`;
+  return result;
+};

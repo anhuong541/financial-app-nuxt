@@ -23,7 +23,7 @@ export const useQueryUserHabits = () => {
   });
 };
 
-export const useQueryCheckingUserHabit = (timeKey: ComputedRef<string>) => {
+export const useQueryCheckingUserHabit = (timeKey: ComputedRef<string>, checkKey: { [key: string]: boolean }) => {
   const { authState } = useAuth();
   const { $firestore, $getFirebaseDoc } = useNuxtApp();
   const userId = computed(() => authState.value?.uid ?? null);
@@ -31,7 +31,7 @@ export const useQueryCheckingUserHabit = (timeKey: ComputedRef<string>) => {
   return useQuery({
     retry: false,
     refetchOnWindowFocus: false,
-    enabled: computed(() => !!userId.value), // Ensure the query only runs when userId is ready
+    enabled: computed(() => !!userId.value && !checkKey[timeKey.value]), // Ensure the query only runs when userId is ready
     queryKey: computed(() => [queryKeys.checkingHabits, userId.value, timeKey]),
     queryFn: async () => {
       if (userId.value) {
