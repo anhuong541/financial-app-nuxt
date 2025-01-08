@@ -1,27 +1,24 @@
-<script setup>
+<script setup lang="ts">
 import { LayoutDashboard } from "lucide-vue-next";
 import { signInWithPopup } from "firebase/auth";
 import { provider } from "~/plugins/firebase";
 import LoginForm from "~/components/pages-dependencies/login/LoginForm.vue";
 import Button from "~/components/common/Button.vue";
+import { APP_PARAM_COOKIE } from "~/constants/cookie";
 
 const router = useRouter();
 const { $auth } = useNuxtApp();
-
 const { isAuthenticated } = useAuth();
+const appParam = useCookie(APP_PARAM_COOKIE);
+
 watch(isAuthenticated, (val) => {
-  console.log("Auth State:", val);
   if (val) {
-    router.push("/habit-tracking");
+    router.push(appParam.value ?? "/habit-tracking");
   }
 });
 
 async function signInWithGoogle() {
-  try {
-    await signInWithPopup($auth, provider);
-  } catch (error) {
-    console.error("Error signing in: ", error.message);
-  }
+  await signInWithPopup($auth, provider).catch((err) => console.log("error: ", err));
 }
 </script>
 

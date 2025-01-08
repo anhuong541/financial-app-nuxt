@@ -35,7 +35,10 @@ const avatarPopoverItems = ref<PopoverItems[]>([
   {
     label: "Sign Out",
     icon: LogOut,
-    action: () => signOut($auth),
+    action: () => {
+      signOut($auth);
+      router.push("/login");
+    },
   },
 ]);
 </script>

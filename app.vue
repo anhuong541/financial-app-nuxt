@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const layoutName = "responsive-remove-mobile";
+const layoutName = "body-layout";
 </script>
 
 <template>
