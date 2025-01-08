@@ -37,4 +37,7 @@
 <script lang="ts" setup>
 import { Menu } from "lucide-vue-next";
 import Avatar from "./Avatar.vue";
+import type { ProductivityType } from "~/types";
+
+const props = defineProps<{ appType: ProductivityType }>();
 </script>

@@ -7,12 +7,20 @@
         <div class="space-y-4">
           <h1 class="text-2xl font-bold text-center text-coral-500 bg-clip-text">What do you like today?</h1>
 
-          <NuxtLink
-            to="/habit-tracking"
-            class="w-full flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-coral-500 hover:bg-coral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral-500"
-          >
-            Tracking My Habit
-          </NuxtLink>
+          <div class="space-y-2">
+            <NuxtLink
+              to="/habit-tracking"
+              class="w-full flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-coral-500 hover:bg-coral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral-500"
+            >
+              Tracking My Habit
+            </NuxtLink>
+            <NuxtLink
+              to="/financial-tracking"
+              class="w-full flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-coral-500 hover:bg-coral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coral-500"
+            >
+              My Financial Tracker
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </div>
