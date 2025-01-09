@@ -7,7 +7,7 @@ import HabitTrackingTable from "~/components/pages-dependencies/habit-tracking/H
 </script>
 
 <template>
-  <NuxtLayout name="user-layout">
+  <NuxtLayout name="user-layout" app-type="habit-tracking">
     <div class="p-2 bg-white shadow-md rounded-md">
       <HabitTrackingTable />
     </div>

@@ -81,6 +81,7 @@ export const useMutationAddNewHabit = () => {
         await setDoc(docRef, {
           ...habit,
           id: habitId,
+          goal: Number(habit.goal),
           created_at: firebastDataFormat(new Date()),
           updated_at: firebastDataFormat(new Date()),
         });
@@ -101,6 +102,7 @@ export const useMutationEditHabit = () => {
         await updateDoc(docRef, {
           ...habit,
           id: habitId,
+          goal: Number(habit.goal),
           updated_at: firebastDataFormat(new Date()),
         });
       }
