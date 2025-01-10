@@ -1,24 +1,19 @@
 <script lang="ts" setup>
-import { useQueryClient } from "@tanstack/vue-query";
 import { Plus } from "lucide-vue-next";
 import Button from "~/components/common/Button.vue";
 import Input from "~/components/common/Input.vue";
 import Modal from "~/components/common/Modal.vue";
 import TextArea from "~/components/common/TextArea.vue";
 import { useMutationAddNewHabit } from "~/libs/vue-query/query-action";
-import type { AddHabitForm, HabitsType } from "~/types/habits-table-type";
+import type { AddHabitForm } from "~/types/habits-table-type";
 import { addHabitModalStore } from "~/stores/globalModals";
-import { queryKeys } from "~/libs/vue-query/query-key";
 import { HABIT_COLORS } from "~/constants";
+import { useMyHabitsStore } from "~/stores/habits";
 
-const props = defineProps<{
-  habits: HabitsType[];
-}>();
-
-const queryClient = useQueryClient();
 const addHabitModal = addHabitModalStore();
+const { addHabit, $state } = useMyHabitsStore();
 
-const order = computed(() => props.habits.length + 1);
+const order = computed(() => $state.habits.length + 1);
 const { mutateAsync: addNewHabit } = useMutationAddNewHabit();
 
 const addNewHabitForm = ref<AddHabitForm>({
@@ -38,8 +33,13 @@ watch(order, (val) => {
 const handleSubmitAddNewHabit = () => {
   addNewHabit(addNewHabitForm.value, {
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.listUserHabits],
+      const habitId = toKebabCase(addNewHabitForm.value.label);
+      addHabit({
+        ...addNewHabitForm.value,
+        id: habitId,
+        goal: Number(addNewHabitForm.value.goal),
+        created_at: firebastDataFormat(new Date()),
+        updated_at: firebastDataFormat(new Date()),
       });
       addHabitModal.onClose();
     },

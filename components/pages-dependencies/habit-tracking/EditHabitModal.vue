@@ -7,33 +7,29 @@ import Input from "~/components/common/Input.vue";
 import TextArea from "~/components/common/TextArea.vue";
 import { HABIT_COLORS } from "~/constants";
 import { useMutationDeleteHabit, useMutationEditHabit } from "~/libs/vue-query/query-action";
-import { useQueryClient } from "@tanstack/vue-query";
-import { queryKeys } from "~/libs/vue-query/query-key";
+import { useMyHabitsStore } from "~/stores/habits";
 
-const props = defineProps<{ habit: HabitsType }>();
 const { $lodash } = useNuxtApp();
 
 const editHabitModal = editHabitModalStore();
-const queryClient = useQueryClient();
+const { $state, updateHabit, deleteHabit: deleteHabitClient } = useMyHabitsStore();
 const { mutateAsync: editHabit } = useMutationEditHabit();
 const { mutateAsync: deleteHabit } = useMutationDeleteHabit();
 
-const editHabitForm = computed<HabitsType>(() => ({ ...props.habit }));
+const editHabitForm = computed<HabitsType>(() => ({ ...$state.selectedHabit }));
 
 const handleSubmitEditHabit = async () => {
   //  TODO: This is submit is still need to check the condition if the data is changing or not so we can stop handle edit error
   // i thing we should use validation library to handle before submit for: learn to handle validate on vue with solve the problem above
-  if ($lodash.isEqual(editHabitForm.value, props.habit)) {
+  if ($lodash.isEqual(editHabitForm.value, $state.selectedHabit)) {
     editHabitModal.onClose();
     return;
   }
   await editHabit(
-    { habit: editHabitForm.value, habitId: props.habit.id },
+    { habit: editHabitForm.value, habitId: $state.selectedHabit.id },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: [queryKeys.listUserHabits],
-        });
+        updateHabit(editHabitForm.value);
         editHabitModal.onClose();
       },
     }
@@ -41,11 +37,9 @@ const handleSubmitEditHabit = async () => {
 };
 
 const handleDeleteHabit = async () => {
-  await deleteHabit(props.habit.id, {
+  await deleteHabit($state.selectedHabit.id, {
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [queryKeys.listUserHabits],
-      });
+      deleteHabitClient();
       editHabitModal.onClose();
     },
   });
@@ -53,7 +47,7 @@ const handleDeleteHabit = async () => {
 </script>
 
 <template>
-  <Modal :title="props.habit?.label" modal-id="editHabitModalStore">
+  <Modal :title="$state.selectedHabit?.label" modal-id="editHabitModalStore">
     <template #content>
       <div class="flex flex-col gap-4">
         <Input
@@ -61,7 +55,7 @@ const handleDeleteHabit = async () => {
           type="text"
           title="Title"
           required
-          :value="props.habit?.label"
+          :value="$state.selectedHabit?.label"
           placeholder="Your habit title"
           @input="editHabitForm.label = $event.target.value"
         />
@@ -69,7 +63,7 @@ const handleDeleteHabit = async () => {
           id="desc"
           rows="4"
           title="Description"
-          :value="props.habit.description"
+          :value="$state.selectedHabit.description"
           placeholder="Habit description"
           @input="editHabitForm.description = $event.target.value"
         />
@@ -79,7 +73,7 @@ const handleDeleteHabit = async () => {
           title="Monthly Goal"
           required
           v-model="editHabitForm.goal"
-          :value="props.habit.goal"
+          :value="$state.selectedHabit.goal"
           @input="editHabitForm.goal = $event.target.value"
           placeholder="15"
         />
