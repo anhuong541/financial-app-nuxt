@@ -1,33 +1,23 @@
 <template>
-  <div class="min-h-screen bg-gray-100">
-    <!-- Total Balance Card -->
-    <div class="bg-[#2F4858] text-white p-6 rounded-xl mb-6">
+  <div class="grid grid-cols-12 gap-6">
+    <div class="col-span-12 bg-gray-600 text-white p-6 rounded-xl">
       <p class="text-sm mb-2">Total Balance</p>
       <div class="flex justify-between items-center">
-        <div class="flex items-baseline">
-          <span class="text-3xl font-bold">€</span>
+        <div class="flex items-center">
+          <span class="text-3xl font-bold"><Wallet class="w-8 h-8" /></span>
           <span class="text-4xl font-bold ml-1">320.845,20</span>
-          <span class="ml-4 text-green-400">15.8% <TrendingUpIcon class="inline w-4 h-4" /></span>
         </div>
         <div class="flex gap-3">
-          <button class="bg-[#4CD080] hover:bg-opacity-90 px-4 py-2 rounded-lg flex items-center gap-2">
-            <PlusIcon class="w-5 h-5" /> Add
-          </button>
-          <button class="bg-[#1d2f38] hover:bg-opacity-90 px-4 py-2 rounded-lg flex items-center gap-2">
-            <ArrowUpIcon class="w-5 h-5" /> Send
-          </button>
-          <button class="bg-[#1d2f38] hover:bg-opacity-90 px-4 py-2 rounded-lg flex items-center gap-2">
-            <DownloadIcon class="w-5 h-5" /> Request
-          </button>
-          <button class="bg-[#1d2f38] hover:bg-opacity-90 px-3 py-2 rounded-lg">
+          <Button> <HandCoins class="w-5 h-5" />Add Income</Button>
+          <Button variant="contrast"> <Banknote class="w-5 h-5" />Add Expense</Button>
+          <Button variant="contrast">
             <MoreHorizontalIcon class="w-5 h-5" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>
 
-    <!-- Cash Flow Section -->
-    <div class="bg-white rounded-xl p-6 mb-6">
+    <div class="col-span-9 bg-white rounded-xl p-6">
       <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-2">
           <TrendingDownIcon class="w-5 h-5 text-[#ff7043]" />
@@ -36,12 +26,12 @@
         <div class="flex gap-3">
           <button class="bg-gray-100 px-4 py-2 rounded-lg">Weekly</button>
           <button class="px-4 py-2">Daily</button>
-          <button class="flex items-center gap-2 px-4 py-2"><SettingsIcon class="w-4 h-4" /> Manage</button>
+          <button class="flex items-center gap-2 px-4 py-2"><SettingsIcon class="w-4 h-4" />Manage</button>
         </div>
       </div>
 
       <!-- Income/Expense Stats -->
-      <div class="grid grid-cols-2 gap-4 mt-6">
+      <div class="grid grid-cols-2 gap-4">
         <div class="flex items-center gap-4">
           <div class="p-3 bg-[#2F4858] rounded-lg">
             <TrendingDownIcon class="w-6 h-6 text-white" />
@@ -50,7 +40,6 @@
             <h3 class="text-sm text-gray-600">Income</h3>
             <div class="flex items-center gap-2">
               <span class="text-2xl font-bold">€12.378,20</span>
-              <span class="text-green-500 text-sm">45.0% ↑</span>
             </div>
           </div>
         </div>
@@ -62,15 +51,25 @@
             <h3 class="text-sm text-gray-600">Expense</h3>
             <div class="flex items-center gap-2">
               <span class="text-2xl font-bold">€5.788,21</span>
-              <span class="text-red-500 text-sm">12.5% ↓</span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Account Cards -->
-    <div class="grid grid-cols-3 gap-6 mb-6">
+    <div class="col-span-3 bg-white p-6 rounded-xl">
+      <div class="flex items-center gap-2 mb-4">
+        <PiggyBankIcon class="w-5 h-5 text-[#ff7043]" />
+        <h3 class="font-semibold">Total Saving</h3>
+      </div>
+      <p class="text-3xl font-bold mb-2">€3.765,35</p>
+      <div class="flex items-center text-red-500 text-sm">
+        <span>8.2% ↓</span>
+      </div>
+      <p class="text-sm text-gray-500 mt-2">vs. 4.116,50 Last Period</p>
+    </div>
+
+    <div class="col-span-3 grid grid-rows-3 gap-6">
       <div class="bg-white p-6 rounded-xl">
         <div class="flex items-center gap-2 mb-4">
           <BuildingIcon class="w-5 h-5 text-[#ff7043]" />
@@ -85,14 +84,14 @@
 
       <div class="bg-white p-6 rounded-xl">
         <div class="flex items-center gap-2 mb-4">
-          <PiggyBankIcon class="w-5 h-5 text-[#ff7043]" />
-          <h3 class="font-semibold">Total Saving</h3>
+          <SaveIcon class="w-5 h-5 text-[#ff7043]" />
+          <h3 class="font-semibold">Tax Reserve</h3>
         </div>
-        <p class="text-3xl font-bold mb-2">€3.765,35</p>
-        <div class="flex items-center text-red-500 text-sm">
-          <span>8.2% ↓</span>
+        <p class="text-3xl font-bold mb-2">€14.376,16</p>
+        <div class="flex items-center text-green-500 text-sm">
+          <span>35.2% ↑</span>
         </div>
-        <p class="text-sm text-gray-500 mt-2">vs. 4.116,50 Last Period</p>
+        <p class="text-sm text-gray-500 mt-2">vs. 10.236,46 Last Period</p>
       </div>
 
       <div class="bg-white p-6 rounded-xl">
@@ -108,9 +107,7 @@
       </div>
     </div>
 
-    <!-- Recent Activity & Cards Section -->
-    <div class="grid grid-cols-3 gap-6">
-      <!-- Recent Activity -->
+    <div class="col-span-9 grid gap-6">
       <div class="col-span-2 bg-white rounded-xl p-6">
         <div class="flex justify-between items-center mb-6">
           <div class="flex items-center gap-2">
@@ -126,7 +123,6 @@
           </div>
         </div>
 
-        <!-- Activity Table -->
         <table class="w-full">
           <thead class="text-left text-sm text-gray-500">
             <tr>
@@ -157,8 +153,7 @@
         </table>
       </div>
 
-      <!-- My Cards -->
-      <div class="bg-white rounded-xl p-6">
+      <!-- <div class="col-span-4 bg-white rounded-xl p-6">
         <div class="flex justify-between items-center mb-6">
           <div class="flex items-center gap-2">
             <CreditCardIcon class="w-5 h-5 text-[#ff7043]" />
@@ -167,7 +162,6 @@
           <button class="text-sm text-gray-500 hover:text-gray-700">See All →</button>
         </div>
 
-        <!-- Card Display -->
         <div class="bg-[#2F4858] text-white p-6 rounded-xl">
           <div class="flex justify-between items-start mb-12">
             <span class="font-bold text-xl">VISA</span>
@@ -176,7 +170,7 @@
           <p class="mb-4 text-lg tracking-wider">**** **** **** 2104</p>
           <p class="text-2xl font-bold">€4.540,20</p>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -186,8 +180,6 @@ import {
   TrendingUpIcon,
   TrendingDownIcon,
   PlusIcon,
-  ArrowUpIcon,
-  DownloadIcon,
   MoreHorizontalIcon,
   SettingsIcon,
   BuildingIcon,
@@ -196,7 +188,9 @@ import {
   ActivityIcon,
   FilterIcon,
   ArrowUpDownIcon,
-  CreditCardIcon,
-  ShipIcon,
+  Banknote,
+  HandCoins,
+  Wallet,
 } from "lucide-vue-next";
+import Button from "~/components/common/Button.vue";
 </script>

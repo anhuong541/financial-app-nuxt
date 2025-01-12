@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Banking from "~/components/pages-dependencies/financial-tracking/Banking.vue";
-import BudgetOverview from "~/components/pages-dependencies/financial-tracking/BudgetOverview.vue";
 
 definePageMeta({
   middleware: "auth",
@@ -11,17 +10,12 @@ definePageMeta({
 // Tính đến những khoản mà mình sẽ chia trong tháng
 // List ra một danh sách nhỏ để filter ra được là những khoản chi tiêu nhỏ như tiền ăn kem, ăn vặt chiếm tổng bao nhiêu.
 // Các tag như chi phí không cần thiết hoặc chi phí cần thiết
-
-const { data: count } = await useFetch("/api/count");
-
-console.log({ count });
 </script>
 
 <template>
   <NuxtLayout name="user-layout" app-type="financial-tracking">
-    <!-- <div class="grid grid-cols-12"> -->
-    <!-- <BudgetOverview /> -->
-    <!-- <Banking /> -->
-    <!-- </div> -->
+    <div class="h-[calc(100vh-64px)]]">
+      <Banking />
+    </div>
   </NuxtLayout>
 </template>
