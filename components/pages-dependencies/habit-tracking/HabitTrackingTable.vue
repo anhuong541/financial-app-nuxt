@@ -198,9 +198,9 @@ watch(checkingHabit, (checkinValue) => {
 
         <tbody>
           <tr
-            v-for="(habit, index) in $state.habits"
+            v-for="(habit, index) in $state.habits ?? []"
             :key="habit.id"
-            :class="cn('border-t text-sm hover:!bg-gray-100', index === habits.length - 1 && 'border-b')"
+            :class="cn('border-t text-sm hover:!bg-gray-100', index === $state.habits.length - 1 && 'border-b')"
             :draggable="isDragable"
             @dragstart="onDragStart(index)"
             @dragover.prevent="onDragOver(index)"
@@ -238,7 +238,7 @@ watch(checkingHabit, (checkinValue) => {
               :is-habit-completed="isHabitCompleted(habit, day.date)"
               :habit-color="habit.color"
               :day="day"
-              :is-last-habit="index === habits.length - 1"
+              :is-last-habit="index === $state.habits.length - 1"
               :today="today"
             />
 

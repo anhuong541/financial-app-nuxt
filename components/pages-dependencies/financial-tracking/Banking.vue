@@ -34,7 +34,7 @@
       <div class="grid grid-cols-2 gap-4">
         <div class="flex items-center gap-4">
           <div class="p-3 bg-[#2F4858] rounded-lg">
-            <TrendingDownIcon class="w-6 h-6 text-white" />
+            <TrendingDownIcon class="w-4 h-4 text-white" />
           </div>
           <div>
             <h3 class="text-sm text-gray-600">Income</h3>
@@ -44,8 +44,8 @@
           </div>
         </div>
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-[#4CD080] rounded-lg">
-            <TrendingUpIcon class="w-6 h-6 text-white" />
+          <div class="p-2 bg-[#4CD080] rounded-lg">
+            <TrendingUpIcon class="w-4 h-4 text-white" />
           </div>
           <div>
             <h3 class="text-sm text-gray-600">Expense</h3>
