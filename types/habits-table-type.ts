@@ -2,15 +2,9 @@ export type HabitsType = {
   id: string;
   label: string;
   tag: string;
-  created_at: {
-    seconds: number;
-    nanoseconds: number;
-  };
+  created_at: string;
   category: string[];
-  updated_at: {
-    seconds: number;
-    nanoseconds: number;
-  };
+  updated_at: string;
   order: number;
   description: string;
   color: string;

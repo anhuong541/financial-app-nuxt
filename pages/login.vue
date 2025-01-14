@@ -5,11 +5,13 @@ import { provider } from "~/plugins/firebase";
 import LoginForm from "~/components/pages-dependencies/login/LoginForm.vue";
 import Button from "~/components/common/Button.vue";
 import { APP_PARAM_COOKIE } from "~/constants/cookie";
+import { productivityMainHeader } from "~/constants/title";
 
 const router = useRouter();
 const { $auth } = useNuxtApp();
 const { isAuthenticated } = useAuth();
 const appParam = useCookie(APP_PARAM_COOKIE);
+const appType = ref<string>(appParam.value?.split("/")[1] ?? "habit-tracking");
 
 watch(isAuthenticated, (val) => {
   if (val) {
@@ -31,8 +33,10 @@ async function signInWithGoogle() {
         </div>
         <h2 class="mt-6 text-3xl font-bold text-gray-900">Welcome back</h2>
         <p class="mt-2 text-gray-600">
-          Sign in with Google to access <strong class="font-medium text-coral-500">Habit Tracking</strong><br />Email sign-in not
-          working ¯\_(ツ)_/¯
+          Sign in with Google to access <strong class="font-medium text-coral-500">{{ productivityMainHeader[appType] }}</strong>
+        </p>
+        <p class="text-coral-400 text-sm">
+          🔒 <span class="italic">Oops! Email sign-in isn't working. Try signing in with Google instead! ¯\_(ツ)_/¯</span>
         </p>
       </div>
 
@@ -56,7 +60,7 @@ async function signInWithGoogle() {
 
       <div class="relative">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-300"></div>
+          <div class="w-full border-t border-gray-300" />
         </div>
         <div class="relative flex justify-center text-sm">
           <span class="px-2 bg-gray-50 text-gray-500"> or sign in with email </span>
@@ -64,10 +68,9 @@ async function signInWithGoogle() {
       </div>
 
       <LoginForm />
-
-      <p class="text-center text-sm text-gray-600">
+      <p class="text-center text-sm text-gray-600 opacity-25 cursor-default">
         No account?
-        <a href="#" class="font-medium text-coral-500 hover:text-coral-400"> Create an account </a>
+        <a href="#" class="font-medium text-coral-500 hover:text-coral-400 cursor-default"> Create an account </a>
       </p>
     </div>
   </div>

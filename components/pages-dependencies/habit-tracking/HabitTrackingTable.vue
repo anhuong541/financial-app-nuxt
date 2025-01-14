@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from "lucide-vue-next";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-vue-next";
 import { useMutationMarkCheckingHabit, useQueryCheckingUserHabit, useQueryUserHabits } from "~/libs/vue-query/query-action";
 import type { HabitsType } from "~/types/habits-table-type";
 import AddHabitModal from "./AddHabitModal.vue";
@@ -10,6 +10,7 @@ import EditHabitModal from "./EditHabitModal.vue";
 import { editHabitModalStore } from "~/stores/globalModals";
 import AchievedCell from "./AchievedCell.vue";
 import HabitDayCell from "./HabitDayCell.vue";
+import { useMyHabitsStore } from "~/stores/habits";
 
 // Completed habits tracking
 const completedHabits = ref(new Set());
@@ -21,31 +22,13 @@ const curentYear = dayjs().year();
 const curentMonth = dayjs().month();
 const today = ref<number | null>(dayjs().date());
 const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
-const listHabits = ref<HabitsType[]>([]);
 const dragSourceIndex = ref<number | null>(null);
 const isDragable = ref(false);
 const checkKey = ref<{ [key: string]: boolean }>({});
-const selectedHabit = ref<HabitsType>({
-  id: "",
-  label: "",
-  tag: "",
-  created_at: {
-    seconds: 0,
-    nanoseconds: 0,
-  },
-  category: [],
-  updated_at: {
-    seconds: 0,
-    nanoseconds: 0,
-  },
-  order: 0,
-  description: "",
-  color: "",
-  goal: 0,
-});
 
 const selectCurrentCheckingTime = computed(() => getDateKey(selectYear.value, selectMonth.value));
 
+const { setSelectedHabit, setSelectedHabitIndex, $state, updateListHabits } = useMyHabitsStore();
 const editHabitModal = editHabitModalStore();
 const { data: habits } = useQueryUserHabits();
 const { data: checkingHabit } = useQueryCheckingUserHabit(selectCurrentCheckingTime, checkKey.value);
@@ -100,12 +83,12 @@ const onDrop = (targetIndex: number) => {
   // console.log({ targetIndex, dragSourceIndex: dragSourceIndex.value });
   if (sourceIndex === null || sourceIndex === targetIndex) return;
 
-  const draggedItem = listHabits.value[sourceIndex];
-  const updatedItems = [...listHabits.value];
+  const draggedItem = $state.habits[sourceIndex];
+  const updatedItems = [...$state.habits];
 
   updatedItems.splice(sourceIndex, 1);
   updatedItems.splice(targetIndex, 0, draggedItem);
-  listHabits.value = [...updatedItems];
+  updateListHabits(updatedItems);
   // Clear the drag source index
   dragSourceIndex.value = null;
 };
@@ -137,14 +120,18 @@ const calculateDays = () => {
   }
 };
 
-calculateDays();
-watch(selectMonth, () => {
-  days.value = [];
-  calculateDays();
-});
+useAsyncData(
+  async () => {
+    days.value = [];
+    calculateDays();
+  },
+  {
+    watch: [selectMonth],
+  }
+);
 
 watch(habits, (val) => {
-  listHabits.value = [...(val ?? [])].sort((a: HabitsType, b: HabitsType) => a.order - b.order);
+  updateListHabits([...(val ?? [])].sort((a: HabitsType, b: HabitsType) => a.order - b.order));
 });
 
 watch([selectMonth, selectYear], ([newSelectMonth, newSelectYear]) => {
@@ -211,9 +198,9 @@ watch(checkingHabit, (checkinValue) => {
 
         <tbody>
           <tr
-            v-for="(habit, index) in listHabits"
+            v-for="(habit, index) in $state.habits ?? []"
             :key="habit.id"
-            :class="cn('border-t text-sm hover:!bg-gray-100', index === habits.length - 1 && 'border-b')"
+            :class="cn('border-t text-sm hover:!bg-gray-100', index === $state.habits.length - 1 && 'border-b')"
             :draggable="isDragable"
             @dragstart="onDragStart(index)"
             @dragover.prevent="onDragOver(index)"
@@ -224,7 +211,8 @@ watch(checkingHabit, (checkinValue) => {
               @click="
                 () => {
                   editHabitModal.onChangeModal();
-                  selectedHabit = habit;
+                  setSelectedHabitIndex(index);
+                  setSelectedHabit(habit);
                 }
               "
               v-on:mouseenter="isDragable = true"
@@ -250,7 +238,7 @@ watch(checkingHabit, (checkinValue) => {
               :is-habit-completed="isHabitCompleted(habit, day.date)"
               :habit-color="habit.color"
               :day="day"
-              :is-last-habit="index === habits.length - 1"
+              :is-last-habit="index === $state.habits.length - 1"
               :today="today"
             />
 
@@ -269,7 +257,7 @@ watch(checkingHabit, (checkinValue) => {
       </table>
     </div>
 
-    <EditHabitModal :habit="selectedHabit" />
-    <AddHabitModal :habits="habits ?? []" />
+    <EditHabitModal />
+    <AddHabitModal />
   </div>
 </template>

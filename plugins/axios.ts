@@ -27,40 +27,25 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     (error) => {
       // Ensure rejection with an Error object
-      const errorMessage =
-        error.response?.data?.message || error.message || "Response error";
+      const errorMessage = error.response?.data?.message || error.message || "Response error";
       return Promise.reject(new Error(errorMessage));
     }
   );
 
   // Define Axios methods
-  const getRequest = <T = any>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => {
+  const getRequest = <T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
     return api.get<T>(url, config);
   };
 
-  const postRequest = <T = any>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => {
+  const postRequest = <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
     return api.post<T>(url, data, config);
   };
 
-  const putRequest = <T = any>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => {
+  const putRequest = <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
     return api.put<T>(url, data, config);
   };
 
-  const deleteRequest = <T = any>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => {
+  const deleteRequest = <T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
     return api.delete<T>(url, config);
   };
 
