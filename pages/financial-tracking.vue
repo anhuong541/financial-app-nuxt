@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Banking from "~/components/pages-dependencies/financial-tracking/Banking.vue";
+import PersonalBudgetOverview from "~/components/pages-dependencies/financial-tracking/PersonalBudgetOverview/index.vue";
 
 definePageMeta({
   middleware: "auth",
@@ -15,7 +15,7 @@ definePageMeta({
 <template>
   <NuxtLayout name="user-layout" app-type="financial-tracking">
     <div class="h-[calc(100vh-64px)]]">
-      <Banking />
+      <PersonalBudgetOverview />
     </div>
   </NuxtLayout>
 </template>

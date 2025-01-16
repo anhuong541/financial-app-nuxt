@@ -1,61 +1,22 @@
+<script setup lang="ts">
+import {
+  PlusIcon,
+  MoreHorizontalIcon,
+  BuildingIcon,
+  PiggyBankIcon,
+  SaveIcon,
+  ActivityIcon,
+  FilterIcon,
+  ArrowUpDownIcon,
+} from "lucide-vue-next";
+import Balance from "./Balance.vue";
+import CashFlow from "./CashFlow.vue";
+</script>
+
 <template>
   <div class="grid grid-cols-12 gap-6">
-    <div class="col-span-12 bg-gray-600 text-white p-6 rounded-xl">
-      <p class="text-sm mb-2">Total Balance</p>
-      <div class="flex justify-between items-center">
-        <div class="flex items-center">
-          <span class="text-3xl font-bold"><Wallet class="w-8 h-8" /></span>
-          <span class="text-4xl font-bold ml-1">320.845,20</span>
-        </div>
-        <div class="flex gap-3">
-          <Button> <HandCoins class="w-5 h-5" />Add Income</Button>
-          <Button variant="contrast"> <Banknote class="w-5 h-5" />Add Expense</Button>
-          <Button variant="contrast">
-            <MoreHorizontalIcon class="w-5 h-5" />
-          </Button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-span-9 bg-white rounded-xl p-6">
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center gap-2">
-          <TrendingDownIcon class="w-5 h-5 text-[#ff7043]" />
-          <h2 class="text-xl font-semibold">Cash Flow</h2>
-        </div>
-        <div class="flex gap-3">
-          <button class="bg-gray-100 px-4 py-2 rounded-lg">Weekly</button>
-          <button class="px-4 py-2">Daily</button>
-          <button class="flex items-center gap-2 px-4 py-2"><SettingsIcon class="w-4 h-4" />Manage</button>
-        </div>
-      </div>
-
-      <!-- Income/Expense Stats -->
-      <div class="grid grid-cols-2 gap-4">
-        <div class="flex items-center gap-4">
-          <div class="p-3 bg-[#2F4858] rounded-lg">
-            <TrendingDownIcon class="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h3 class="text-sm text-gray-600">Income</h3>
-            <div class="flex items-center gap-2">
-              <span class="text-2xl font-bold">€12.378,20</span>
-            </div>
-          </div>
-        </div>
-        <div class="flex items-center gap-4">
-          <div class="p-2 bg-[#4CD080] rounded-lg">
-            <TrendingUpIcon class="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h3 class="text-sm text-gray-600">Expense</h3>
-            <div class="flex items-center gap-2">
-              <span class="text-2xl font-bold">€5.788,21</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Balance />
+    <CashFlow />
 
     <div class="col-span-3 bg-white p-6 rounded-xl">
       <div class="flex items-center gap-2 mb-4">
@@ -174,23 +135,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import {
-  TrendingUpIcon,
-  TrendingDownIcon,
-  PlusIcon,
-  MoreHorizontalIcon,
-  SettingsIcon,
-  BuildingIcon,
-  PiggyBankIcon,
-  SaveIcon,
-  ActivityIcon,
-  FilterIcon,
-  ArrowUpDownIcon,
-  Banknote,
-  HandCoins,
-  Wallet,
-} from "lucide-vue-next";
-import Button from "~/components/common/Button.vue";
-</script>

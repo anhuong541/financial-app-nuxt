@@ -1,4 +1,9 @@
-export const productivityMainHeader: { [key: string]: string } = {
-  "habit-tracking": "Daily Habit Progress",
-  "financial-tracking": "Personal Finance Manager",
+export const productivityMainHeader: {
+  [key: string]: {
+    title: string;
+    color: string;
+  };
+} = {
+  "habit-tracking": { title: "Daily Habit Progress", color: "" },
+  "financial-tracking": { title: "Personal Finance Manager", color: "" },
 };

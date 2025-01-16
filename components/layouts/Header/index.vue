@@ -4,12 +4,38 @@
       <button class="p-2 bg-white shadow-md rounded-md">
         <Menu class="w-5 h-5" />
       </button>
-      <Dropdown :options="options" :placeholder="productivityMainHeader[props.appType]" v-on:click="handleOptionOnclick" />
+      <Dropdown :options="options" v-on:click="handleOptionOnclick">
+        <template #trigger="{ toggleDropdown, isOpen }">
+          <button
+            @click="toggleDropdown"
+            class="w-full flex items-center gap-2 px-3 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out"
+            :aria-expanded="isOpen"
+            aria-haspopup="true"
+          >
+            <div class="w-5 h-5 bg-[#FF7155] rounded"></div>
+            <span class="flex-1 text-left text-gray-900 text-sm whitespace-nowrap font-medium">
+              {{ productivityMainHeader[props.appType].title }}
+            </span>
+            <ChevronDownIcon
+              class="w-4 h-4 text-gray-400 transition-transform duration-200"
+              :class="{ 'transform rotate-180': isOpen }"
+            />
+          </button>
+        </template>
+        <template #item="{ data }">
+          <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2" @click="handleOptionOnclick(data)">
+            <div class="w-5 h-5 rounded bg-coral-500 flex-shrink-0" />
+            <p>
+              {{ data.label }}
+            </p>
+          </div>
+        </template>
+      </Dropdown>
     </div>
 
     <div class="absolute top-4 left-1/2 -translate-x-1/2 flex items-center">
       <div class="text-2xl font-bold flex items-center gap-1">
-        <span class="text-coral-500">{{ productivityMainHeader[props.appType] }}</span>
+        <span class="text-coral-500">{{ productivityMainHeader[props.appType].title }}</span>
         <span>App</span>
       </div>
     </div>
@@ -21,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Menu } from "lucide-vue-next";
+import { ChevronDownIcon, Menu } from "lucide-vue-next";
 import Avatar from "./Avatar.vue";
 import type { ProductivityType } from "~/types";
 import { productivityMainHeader } from "~/constants/title";
@@ -53,7 +79,7 @@ const createOptions = () => {
   keys.forEach((key) => {
     const href = "/" + key;
     options.value.push({
-      label: productivityMainHeader[key],
+      label: productivityMainHeader[key].title,
       value: href,
       href,
     });

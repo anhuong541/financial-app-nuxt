@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export type ModalsType = "addHabitModalStore" | "editHabitModal";
+export type ModalsType = "addHabitModalStore" | "editHabitModalStore" | "cashflowUpdateModalStore";
 
 // General modal store type
 type ModalState = {
@@ -27,11 +27,13 @@ function createModalStore(modalName: string) {
 // Create individual modal stores
 export const addHabitModalStore = createModalStore("addHabitModal");
 export const editHabitModalStore = createModalStore("editHabitModal");
+export const cashflowUpdateModalStore = createModalStore("cashflowUpdateModal");
 
 // Export all modals in a single object for centralized management
 const globalModals = {
   addHabitModalStore,
   editHabitModalStore,
+  cashflowUpdateModalStore,
 };
 
 // Export for centralized management

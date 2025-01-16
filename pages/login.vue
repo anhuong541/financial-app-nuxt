@@ -33,7 +33,8 @@ async function signInWithGoogle() {
         </div>
         <h2 class="mt-6 text-3xl font-bold text-gray-900">Welcome back</h2>
         <p class="mt-2 text-gray-600">
-          Sign in with Google to access <strong class="font-medium text-coral-500">{{ productivityMainHeader[appType] }}</strong>
+          Sign in with Google to access
+          <strong class="font-medium text-coral-500">{{ productivityMainHeader[appType].title }}</strong>
         </p>
         <p class="text-coral-400 text-sm">
           🔒 <span class="italic">Oops! Email sign-in isn't working. Try signing in with Google instead! ¯\_(ツ)_/¯</span>

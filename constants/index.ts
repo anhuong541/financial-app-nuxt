@@ -30,3 +30,21 @@ export const HABIT_COLORS = [
   "#212121", // Charcoal Black
   "#1B5E20", // Forest Green
 ];
+
+export const CATEGORIES = {
+  health: { label: "Health & Wellness", color: "#4CAF50", icon: "" },
+  entertainment: { label: "Entertainment & Leisure", color: "#FF9800", icon: "" },
+  food: { label: "Food & Groceries", color: "#FF5722", icon: "" },
+  drink: { label: "Beverages", color: "#2196F3", icon: "" },
+  restaurant: { label: "Dining Out", color: "#FFC107", icon: "" },
+  travel: { label: "Travel & Vacation", color: "#009688", icon: "" },
+  transport: { label: "Transportation", color: "#3F51B5", icon: "" },
+  clothing: { label: "Clothing & Apparel", color: "#9C27B0", icon: "" },
+  house: { label: "Housing & Utilities", color: "#673AB7", icon: "" },
+  gifts: { label: "Gifts & Donations", color: "#E91E63", icon: "" },
+  education: { label: "Education & Learning", color: "#00BCD4", icon: "" },
+  works: { label: "Work & Professional Expenses", color: "#8BC34A", icon: "" },
+  sport: { label: "Sports & Fitness", color: "#F44336", icon: "" },
+  communication: { label: "Communication & Subscriptions", color: "#795548", icon: "" },
+};
+export type CategoryKey = keyof typeof CATEGORIES;
