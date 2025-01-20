@@ -129,7 +129,6 @@ const handleSubmitCashflow = () => {};
           id="note-money"
           type="text"
           title="Note"
-          required
           placeholder="Note"
           v-model="typeNewMoneyLog.name"
           @input="typeNewMoneyLog.name = $event.target.value"
